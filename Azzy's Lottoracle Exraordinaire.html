@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang='en'>
+<head>
+<meta charset="UTF-8">
+<title>Azzy's LottOracle Extraordinaire</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+body {
+background: #0a0a0a;
+color: #fff
+font-family: 'VT323', monospace;
+margin: 0;
+padding: 2rem;
+text-align: center;
+overflow: hidden;
+}
+.neon {
+color: #0ff;
+text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff,
+font-size: 24px;
+}
+
+#title {
+font-size: 32px; 
+margin-bottom: 2rem;
+}
+button { 
+background: #0ff
+border: none; 
+color: #000;
+font-familly: 'VT323', monospace;
+font-size: 28px;
+padding: 1rem 3rem;
+margin: 1rem;
+cursor: pointer;
+text-shadow: none;
+box-shadow: 0 0 10px #0ff;
+transition: all 0.3s;
+}
+button:hover { 
+box-shadow: 0 0 20px #0ff, 0 0 30px #0ff;
+transform: scale(1.05)
+}
+#results {
+font-size: 36px;
+margin: 2rem 0;
+line-height: 1.5;
+animation: glow 1s ease-in-out infinite alternate;
+}
+@keyframes glow {
+from {text-shadow: 0 0 10px #0ff; }
+to { text-shadow 0 0 20 px #0ff, 0 0 30px #0ff; }
+}
+#history {
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid #0ff;
+    }
+    #sprite {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 48px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="title" class="neon">Number Generator</div>
+  
+  <button onclick="roll20d70()">ROLL 20d70</button>
+  <button onclick="clearHistory()">CLEAR</button>
+  
+  <div id="results" class="neon">Click to Roll!</div>
+  
+  <div id="history"></div>
+  
+  <div id="sprite">🎲</div>
+<script>
+  let history = [];
+
+  function generateUniqueNumbers(count, min, max) {
+    if (count > (max - min + 1)) {
+      return "Error: Too many numbers requested!";
+    }
+    let numbers = [];
+    for (let i = min; i <= max; i++) {
+      numbers.push(i);
+    }
+    // Fisher-Yates shuffle
+    for (let i = numbers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+    return numbers.slice(0, count); // Take first 'count' after shuffle
+  }
+
+  function roll20d70() {
+    const rolls = generateUniqueNumbers(20, 1, 70);
+    
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = rolls.map(roll => `<span class="roll-item">${roll}</span>`).join('');
+    
+    history.unshift(rolls.join(', '));
+    if (history.length > 10) history.pop();
+    updateHistory();
+  }
+
+  function updateHistory() {
+    const histDiv = document.getElementById('history');
+    histDiv.innerHTML = history.map((rollSet, i) => 
+      `<div class="neon">Roll ${i+1}: ${rollSet}</div>`
+    ).join('');
+  }
+
+  function clearHistory() {
+    history = [];
+    updateHistory();
+  }
+
+  // Typing title
+  const title = document.getElementById('title');
+  const fullTitle = 'Azrael\'s 20d70 Chaos Roller (No Repeats!)';
+  title.textContent = '';
+  let i = 0;
+  function typeTitle() {
+    if (i < fullTitle.length) {
+      title.textContent += fullTitle.charAt(i);
+      i++;
+      setTimeout(typeTitle, 150);
+    }
+  }
+  typeTitle();
+</script>  
+</body>
+</html>
+
+

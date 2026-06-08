@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete RPG Dice Roller</title>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+  /* CSS VARIABLES - Store reusable values! */
+  :root {
+    --neon-cyan: #0ff;
+    --neon-pink: #f0f;
+    --neon-green: #0f0;
+    --neon-yellow: #ff0;
+    --bg-dark: #0a0a0a;
+    --die-bg: #fff;
+  }
+
+  body {
+    background: var(--bg-dark);
+    color: #fff;
+    font-family: 'VT323', monospace;
+    margin: 0;
+    padding: 2rem;
+    text-align: center;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* NEON TEXT EFFECT */
+  .neon {
+    color: var(--neon-cyan);
+    text-shadow: 
+      0 0 5px var(--neon-cyan), 
+      0 0 10px var(--neon-cyan), 
+      0 0 20px var(--neon-cyan);
+  }
+
+  #title {
+    font-size: 48px; 
+    margin-bottom: 1rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { 
+      text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan); 
+    }
+    50% { 
+      text-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan), 0 0 40px var(--neon-cyan); 
+    }
+  }
+
+  /* FLEXBOX - For dice type selector */
+  .dice-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(0, 255, 255, 0.05);
+    border: 2px solid var(--neon-cyan);
+    max-width: 900px;
+    margin: 2rem auto;
+  }
+
+  /* Different button styles for different dice */
+  button { 
+    background: var(--neon-cyan);
+    border: none; 
+    color: #000;
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--neon-cyan);
+    transition: all 0.3s ease;
+    font-weight: bold;
+  }
+
+  button:hover { 
+    box-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+    transform: scale(1.05);
+  }
+
+  button:active {
+    transform: scale(0.95);
+  }
+
+  /* Specific die button colors */
+  .btn-d4 { background: #ff6b6b; box-shadow: 0 0 10px #ff6b6b; }
+  .btn-d4:hover { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff6b6b; }
+
+  .btn-d6 { background: #4ecdc4; box-shadow: 0 0 10px #4ecdc4; }
+  .btn-d6:hover { box-shadow: 0 0 20px #4ecdc4, 0 0 30px #4ecdc4; }
+
+  .btn-d8 { background: #95e1d3; box-shadow: 0 0 10px #95e1d3; }
+  .btn-d8:hover { box-shadow: 0 0 20px #95e1d3, 0 0 30px #95e1d3; }
+
+  .btn-d10 { background: #f38181; box-shadow: 0 0 10px #f38181; }
+  .btn-d10:hover { box-shadow: 0 0 20px #f38181, 0 0 30px #f38181; }
+
+  .btn-d12 { background: #aa96da; box-shadow: 0 0 10px #aa96da; }
+  .btn-d12:hover { box-shadow: 0 0 20px #aa96da, 0 0 30px #aa96da; }
+
+  .btn-d20 { background: #fcbad3; box-shadow: 0 0 10px #fcbad3; }
+  .btn-d20:hover { box-shadow: 0 0 20px #fcbad3, 0 0 30px #fcbad3; }
+
+  .btn-d100 { background: #ffffd2; box-shadow: 0 0 10px #ffffd2; }
+  .btn-d100:hover { box-shadow: 0 0 20px #ffffd2, 0 0 30px #ffffd2; }
+
+  .btn-coin { background: #ffd700; box-shadow: 0 0 10px #ffd700; }
+  .btn-coin:hover { box-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; }
+
+  .btn-clear { background: #ff4757; box-shadow: 0 0 10px #ff4757; }
+  .btn-clear:hover { box-shadow: 0 0 20px #ff4757, 0 0 30px #ff4757; }
+
+  /* Advantage/Disadvantage toggle buttons */
+  .adv-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-left: 1rem;
+  }
+
+  .btn-advantage, .btn-disadvantage, .btn-normal {
+    padding: 0.6rem 1.2rem;
+    font-size: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #888;
+    box-shadow: none;
+  }
+
+  .btn-advantage:hover, .btn-disadvantage:hover, .btn-normal:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: none;
+  }
+
+  /* Active state for toggle buttons */
+  .btn-advantage.active {
+    background: #2ecc71;
+    color: #000;
+    box-shadow: 0 0 10px #2ecc71;
+  }
+
+  .btn-advantage.active:hover {
+    box-shadow: 0 0 20px #2ecc71, 0 0 30px #2ecc71;
+  }
+
+  .btn-disadvantage.active {
+    background: #e74c3c;
+    color: #000;
+    box-shadow: 0 0 10px #e74c3c;
+  }
+
+  .btn-disadvantage.active:hover {
+    box-shadow: 0 0 20px #e74c3c, 0 0 30px #e74c3c;
+  }
+
+  .btn-normal.active {
+    background: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 10px var(--neon-cyan);
+  }
+
+  .btn-normal.active:hover {
+    box-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  }
+
+  /* Visual indicator for discarded die */
+  .die.discarded {
+    opacity: 0.3;
+    filter: grayscale(100%);
+  }
+
+  /* Input styling */
+  input[type="number"] {
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+    font-family: 'VT323', monospace;
+    font-size: 20px;
+    padding: 0.5rem;
+    width: 60px;
+    text-align: center;
+  }
+
+  label {
+    color: var(--neon-cyan);
+    font-size: 18px;
+  }
+
+  /* CSS GRID - For laying out dice */
+  #diceContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem;
+  }
+
+  /* Individual die styling */
+  .die {
+    margin: 0 auto;
+    perspective: 1000px;
+  }
+
+  .die-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+  }
+
+  /* Rolling animation */
+  .die.rolling .die-inner {
+    animation: roll 0.8s ease-out;
+  }
+
+  @keyframes roll {
+    0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    25% { transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg); }
+    50% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+    75% { transform: rotateX(540deg) rotateY(540deg) rotateZ(270deg); }
+    100% { transform: rotateX(720deg) rotateY(720deg) rotateZ(360deg); }
+  }
+
+  .die svg {
+    filter: drop-shadow(0 4px 8px rgba(0, 255, 255, 0.3));
+    transition: filter 0.3s ease;
+  }
+
+  .die:hover svg {
+    filter: drop-shadow(0 6px 12px rgba(0, 255, 255, 0.5));
+  }
+
+  /* Coin flip animation */
+  .coin {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+    perspective: 1000px;
+  }
+
+  .coin.flipping svg {
+    animation: flip 1s ease-out;
+  }
+
+  @keyframes flip {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(1800deg); }
+  }
+
+  /* History section */
+  #history {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid var(--neon-cyan);
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .history-item {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(0, 255, 255, 0.05);
+    border-left: 3px solid var(--neon-cyan);
+    text-align: left;
+  }
+
+  /* Result display */
+  #resultSummary {
+    font-size: 32px;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(0, 255, 255, 0.1);
+    border: 2px solid var(--neon-cyan);
+    max-width: 800px;
+    margin: 2rem auto;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+  <div id="title" class="neon">🎲 ULTIMATE RPG DICE ROLLER 🎲</div>
+  
+  <div class="dice-selector">
+    <label for="diceCount">Count:</label>
+    <input type="number" id="diceCount" min="1" max="20" value="1">
+    
+    <label for="modifier" style="margin-left: 1rem;">Modifier:</label>
+    <input type="number" id="modifier" min="-99" max="99" value="0" placeholder="+/-">
+    
+    <div class="adv-controls">
+      <button class="btn-advantage" onclick="setRollMode('advantage')">ADV</button>
+      <button class="btn-normal active" onclick="setRollMode('normal')">NORMAL</button>
+      <button class="btn-disadvantage" onclick="setRollMode('disadvantage')">DIS</button>
+    </div>
+    
+    <button class="btn-d4" onclick="rollDice(4)">d4</button>
+    <button class="btn-d6" onclick="rollDice(6)">d6</button>
+    <button class="btn-d8" onclick="rollDice(8)">d8</button>
+    <button class="btn-d10" onclick="rollDice(10)">d10</button>
+    <button class="btn-d12" onclick="rollDice(12)">d12</button>
+    <button class="btn-d20" onclick="rollDice(20)">d20</button>
+    <button class="btn-d100" onclick="rollDice(100)">d100</button>
+    <button class="btn-coin" onclick="flipCoin()">COIN</button>
+    <button class="btn-clear" onclick="clearHistory()">CLEAR</button>
+  </div>
+
+  <div id="resultSummary" class="neon"></div>
+
+  <div id="diceContainer"></div>
+  
+  <div id="history"></div>
+
+  <!-- SVG TEMPLATES -->
+  <svg style="display: none;">
+    <defs>
+      <!-- D4 - Triangular pyramid shape -->
+      <g id="d4-template">
+        <polygon points="60,10 10,90 110,90" fill="white" stroke="#ff6b6b" stroke-width="3"/>
+        <text x="60" y="70" font-size="40" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- D6 faces with dots (1-6) -->
+      <g id="d6-1">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="50" cy="50" r="10" fill="black"/>
+      </g>
+      
+      <g id="d6-2">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="30" cy="30" r="10" fill="black"/>
+        <circle cx="70" cy="70" r="10" fill="black"/>
+      </g>
+      
+      <g id="d6-3">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="30" cy="30" r="10" fill="black"/>
+        <circle cx="50" cy="50" r="10" fill="black"/>
+        <circle cx="70" cy="70" r="10" fill="black"/>
+      </g>
+      
+      <g id="d6-4">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="30" cy="30" r="10" fill="black"/>
+        <circle cx="70" cy="30" r="10" fill="black"/>
+        <circle cx="30" cy="70" r="10" fill="black"/>
+        <circle cx="70" cy="70" r="10" fill="black"/>
+      </g>
+      
+      <g id="d6-5">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="30" cy="30" r="10" fill="black"/>
+        <circle cx="70" cy="30" r="10" fill="black"/>
+        <circle cx="50" cy="50" r="10" fill="black"/>
+        <circle cx="30" cy="70" r="10" fill="black"/>
+        <circle cx="70" cy="70" r="10" fill="black"/>
+      </g>
+      
+      <g id="d6-6">
+        <rect width="100" height="100" rx="15" fill="white" stroke="#4ecdc4" stroke-width="3"/>
+        <circle cx="30" cy="25" r="10" fill="black"/>
+        <circle cx="30" cy="50" r="10" fill="black"/>
+        <circle cx="30" cy="75" r="10" fill="black"/>
+        <circle cx="70" cy="25" r="10" fill="black"/>
+        <circle cx="70" cy="50" r="10" fill="black"/>
+        <circle cx="70" cy="75" r="10" fill="black"/>
+      </g>
+
+      <!-- D8 - Octagonal shape -->
+      <g id="d8-template">
+        <polygon points="60,5 100,40 100,80 60,115 20,80 20,40" fill="white" stroke="#95e1d3" stroke-width="3"/>
+        <text x="60" y="75" font-size="45" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- D10 - Pentagon shape -->
+      <g id="d10-template">
+        <polygon points="60,10 105,45 85,100 35,100 15,45" fill="white" stroke="#f38181" stroke-width="3"/>
+        <text x="60" y="75" font-size="45" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- D12 - Dodecagon shape -->
+      <g id="d12-template">
+        <polygon points="60,5 90,15 110,40 110,70 90,95 60,105 30,95 10,70 10,40 30,15" fill="white" stroke="#aa96da" stroke-width="3"/>
+        <text x="60" y="70" font-size="40" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- D20 - Icosagon (20-sided) -->
+      <g id="d20-template">
+        <circle cx="60" cy="60" r="55" fill="white" stroke="#fcbad3" stroke-width="3"/>
+        <polygon points="60,10 90,30 100,60 90,90 60,110 30,90 20,60 30,30" fill="rgba(252,186,211,0.3)" stroke="#fcbad3" stroke-width="2"/>
+        <text x="60" y="75" font-size="40" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- D100 - Percentage die -->
+      <g id="d100-template">
+        <rect width="110" height="110" rx="15" fill="white" stroke="#ffffd2" stroke-width="3"/>
+        <text x="55" y="75" font-size="35" font-weight="bold" text-anchor="middle" fill="black">VALUE</text>
+      </g>
+
+      <!-- Coin - Heads -->
+      <g id="coin-heads">
+        <circle cx="70" cy="70" r="65" fill="gold" stroke="#ffd700" stroke-width="4"/>
+        <circle cx="70" cy="70" r="55" fill="#ffed4e" stroke="#b8860b" stroke-width="2"/>
+        <text x="70" y="85" font-size="35" font-weight="bold" text-anchor="middle" fill="#8b4513">HEADS</text>
+      </g>
+
+      <!-- Coin - Tails -->
+      <g id="coin-tails">
+        <circle cx="70" cy="70" r="65" fill="gold" stroke="#ffd700" stroke-width="4"/>
+        <circle cx="70" cy="70" r="55" fill="#ffed4e" stroke="#b8860b" stroke-width="2"/>
+        <text x="70" y="85" font-size="35" font-weight="bold" text-anchor="middle" fill="#8b4513">TAILS</text>
+      </g>
+    </defs>
+  </svg>
+
+<script>
+  let history = [];
+  let rollMode = 'normal'; // 'normal', 'advantage', 'disadvantage'
+
+  function setRollMode(mode) {
+    rollMode = mode;
+    
+    // Update button states
+    document.querySelectorAll('.btn-advantage, .btn-normal, .btn-disadvantage').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    
+    if (mode === 'advantage') {
+      document.querySelector('.btn-advantage').classList.add('active');
+    } else if (mode === 'disadvantage') {
+      document.querySelector('.btn-disadvantage').classList.add('active');
+    } else {
+      document.querySelector('.btn-normal').classList.add('active');
+    }
+  }
+
+  function createDieSVG(dieType, value) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    
+    // Different sizes for different dice
+    const sizes = {
+      4: { width: 120, height: 120, viewBox: '0 0 120 120' },
+      6: { width: 120, height: 120, viewBox: '0 0 100 100' },
+      8: { width: 120, height: 120, viewBox: '0 0 120 120' },
+      10: { width: 120, height: 120, viewBox: '0 0 120 120' },
+      12: { width: 120, height: 120, viewBox: '0 0 120 120' },
+      20: { width: 120, height: 120, viewBox: '0 0 120 120' },
+      100: { width: 140, height: 140, viewBox: '0 0 110 110' }
+    };
+
+    const size = sizes[dieType];
+    svg.setAttribute('width', size.width);
+    svg.setAttribute('height', size.height);
+    svg.setAttribute('viewBox', size.viewBox);
+
+    // D6 uses pre-made dot faces
+    if (dieType === 6) {
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#d6-${value}`);
+      svg.appendChild(use);
+    } else {
+      // Other dice use templates with VALUE replaced
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#d${dieType}-template`);
+      svg.appendChild(use);
+
+      // Replace VALUE text
+      const text = svg.querySelector('text');
+      if (text) {
+        // Clone the template and modify it
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const template = document.querySelector(`#d${dieType}-template`);
+        g.innerHTML = template.innerHTML.replace('VALUE', value);
+        svg.innerHTML = '';
+        svg.appendChild(g);
+      }
+    }
+
+    return svg;
+  }
+
+  function createCoinSVG(result) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '140');
+    svg.setAttribute('height', '140');
+    svg.setAttribute('viewBox', '0 0 140 140');
+    
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#coin-${result}`);
+    svg.appendChild(use);
+    
+    return svg;
+  }
+
+  function rollDice(dieType) {
+    const count = parseInt(document.getElementById('diceCount').value);
+    const modifier = parseInt(document.getElementById('modifier').value) || 0;
+    const container = document.getElementById('diceContainer');
+    const summary = document.getElementById('resultSummary');
+    
+    container.innerHTML = '';
+    
+    const rolls = [];
+    let discardedRolls = [];
+    
+    // For advantage/disadvantage with single die, roll twice
+    const shouldRollTwice = (rollMode !== 'normal' && count === 1);
+    const actualRollCount = shouldRollTwice ? 2 : count;
+    
+    for (let i = 0; i < actualRollCount; i++) {
+      const value = Math.floor(Math.random() * dieType) + 1;
+      rolls.push(value);
+      
+      const die = document.createElement('div');
+      die.className = 'die rolling';
+      
+      const dieInner = document.createElement('div');
+      dieInner.className = 'die-inner';
+      
+      const svg = createDieSVG(dieType, value);
+      dieInner.appendChild(svg);
+      die.appendChild(dieInner);
+      container.appendChild(die);
+      
+      setTimeout(() => {
+        die.classList.remove('rolling');
+      }, 800);
+    }
+    
+    // Handle advantage/disadvantage
+    let finalRolls = [...rolls];
+    let advDisInfo = '';
+    
+    if (shouldRollTwice) {
+      const allDice = container.querySelectorAll('.die');
+      
+      if (rollMode === 'advantage') {
+        const maxValue = Math.max(...rolls);
+        const maxIndex = rolls.indexOf(maxValue);
+        finalRolls = [maxValue];
+        discardedRolls = rolls.filter((_, idx) => idx !== maxIndex);
+        
+        // Mark discarded die
+        allDice.forEach((die, idx) => {
+          if (idx !== maxIndex) {
+            setTimeout(() => die.classList.add('discarded'), 800);
+          }
+        });
+        
+        advDisInfo = ` (ADV: ${rolls.join(' vs ')})`;
+        
+      } else if (rollMode === 'disadvantage') {
+        const minValue = Math.min(...rolls);
+        const minIndex = rolls.indexOf(minValue);
+        finalRolls = [minValue];
+        discardedRolls = rolls.filter((_, idx) => idx !== minIndex);
+        
+        // Mark discarded die
+        allDice.forEach((die, idx) => {
+          if (idx !== minIndex) {
+            setTimeout(() => die.classList.add('discarded'), 800);
+          }
+        });
+        
+        advDisInfo = ` (DIS: ${rolls.join(' vs ')})`;
+      }
+    }
+    
+    const subtotal = finalRolls.reduce((sum, val) => sum + val, 0);
+    const total = subtotal + modifier;
+    
+    // Update summary with modifier display
+    let modifierText = '';
+    if (modifier !== 0) {
+      modifierText = modifier > 0 ? ` +${modifier}` : ` ${modifier}`;
+    }
+    
+    if (count === 1) {
+      if (modifier !== 0) {
+        summary.textContent = `Rolled: ${finalRolls[0]}${advDisInfo}${modifierText} = ${total}`;
+      } else {
+        summary.textContent = `Rolled: ${finalRolls[0]}${advDisInfo}`;
+      }
+    } else {
+      if (modifier !== 0) {
+        summary.textContent = `Rolled ${count}d${dieType}: [${finalRolls.join(', ')}]${modifierText} = ${total}`;
+      } else {
+        summary.textContent = `Rolled ${count}d${dieType}: [${finalRolls.join(', ')}] = ${total}`;
+      }
+    }
+    
+    // Build type string for history
+    let typeStr = `${count}d${dieType}`;
+    if (rollMode === 'advantage') typeStr += ' (ADV)';
+    if (rollMode === 'disadvantage') typeStr += ' (DIS)';
+    if (modifier !== 0) typeStr += (modifier > 0 ? '+' + modifier : modifier);
+    
+    // Add to history
+    history.unshift({
+      type: typeStr,
+      rolls: finalRolls,
+      allRolls: rolls,
+      discarded: discardedRolls,
+      modifier: modifier,
+      subtotal: subtotal,
+      total: total,
+      mode: rollMode
+    });
+    
+    if (history.length > 15) history.pop();
+    updateHistory();
+  }
+
+  function flipCoin() {
+    const container = document.getElementById('diceContainer');
+    const summary = document.getElementById('resultSummary');
+    
+    container.innerHTML = '';
+    
+    const result = Math.random() < 0.5 ? 'heads' : 'tails';
+    
+    const coin = document.createElement('div');
+    coin.className = 'coin flipping';
+    
+    const svg = createCoinSVG(result);
+    coin.appendChild(svg);
+    container.appendChild(coin);
+    
+    setTimeout(() => {
+      coin.classList.remove('flipping');
+    }, 1000);
+    
+    summary.textContent = `Coin flip: ${result.toUpperCase()}!`;
+    
+    history.unshift({
+      type: 'Coin Flip',
+      rolls: [result],
+      total: result
+    });
+    
+    if (history.length > 15) history.pop();
+    updateHistory();
+  }
+
+  function updateHistory() {
+    const histDiv = document.getElementById('history');
+    histDiv.innerHTML = '<div class="neon" style="text-align: center; margin-bottom: 1rem;">Roll History</div>' + 
+      history.map((entry, i) => {
+        if (entry.type === 'Coin Flip') {
+          return `<div class="history-item neon">
+            ${i + 1}. ${entry.type}: ${entry.total.toUpperCase()}
+          </div>`;
+        }
+        
+        // Show advantage/disadvantage details
+        let rollDisplay = `[${entry.rolls.join(', ')}]`;
+        if (entry.discarded && entry.discarded.length > 0) {
+          rollDisplay = `[${entry.allRolls.join(' vs ')}] → ${entry.rolls[0]}`;
+        }
+        
+        // Show modifier calculation if present
+        if (entry.modifier && entry.modifier !== 0) {
+          return `<div class="history-item neon">
+            ${i + 1}. ${entry.type}: ${rollDisplay} = ${entry.subtotal} ${entry.modifier > 0 ? '+' : ''}${entry.modifier} = ${entry.total}
+          </div>`;
+        }
+        
+        return `<div class="history-item neon">
+          ${i + 1}. ${entry.type}: ${rollDisplay} = ${entry.total}
+        </div>`;
+      }).join('');
+  }
+
+  function clearHistory() {
+    history = [];
+    document.getElementById('resultSummary').textContent = 'Roll some dice!';
+    document.getElementById('diceContainer').innerHTML = '';
+    updateHistory();
+  }
+
+  // Welcome message
+  document.getElementById('resultSummary').textContent = 'Choose your dice and roll!';
+</script>  
+</body>
+</html>

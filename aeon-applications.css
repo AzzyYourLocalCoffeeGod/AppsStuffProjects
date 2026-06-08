@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #0f0c29 0%, #1e1e3f 50%, #2a1a4a 100%);
+  color: #e0e0ff;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(100, 200, 255, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 80% 70%, rgba(180, 100, 255, 0.12) 0%, transparent 25%),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="white" opacity="0.4"/><circle cx="30" cy="80" r="0.8" fill="white" opacity="0.3"/><circle cx="70" cy="20" r="1.2" fill="white" opacity="0.35"/><circle cx="90" cy="60" r="0.9" fill="white" opacity="0.25"/></svg>');
+  background-size: cover, cover, 100px 100px;
+}
+
+.container {
+  background: rgba(20, 20, 60, 0.45);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 700px;
+  margin: 0 auto;
+  border: 1px solid rgba(100, 200, 255, 0.18);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8rem;
+  color: #a0d8ff;
+  text-shadow: 0 0 20px rgba(160, 216, 255, 0.6);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #b0b0ff;
+  margin-bottom: 40px;
+  font-size: 1.2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+label {
+  font-weight: 500;
+  color: #d0d8ff;
+  margin-bottom: 8px;
+  display: block;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #4a4a8a;
+  border-radius: 10px;
+  background: rgba(30, 30, 80, 0.6);
+  color: white;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #80d4ff;
+  box-shadow: 0 0 15px rgba(128, 212, 255, 0.5);
+}
+
+input:invalid:not(:placeholder-shown), textarea:invalid:not(:placeholder-shown) {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
+}
+
+input:valid:not(:placeholder-shown), textarea:valid:not(:placeholder-shown) {
+  border-color: #6bff9c;
+  box-shadow: 0 0 10px rgba(107, 255, 156, 0.4);
+}
+
+input:first-of-type {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-group legend {
+  color: #d0d8ff;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #80d4ff;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  background: linear-gradient(90deg, #6b48ff, #00d4ff);
+  color: white;
+  border: none;
+  padding: 16px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+}

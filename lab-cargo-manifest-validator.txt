@@ -1,0 +1,79 @@
+** start of script.js **
+
+/**
+ * 1. normalizeUnits: Standardizes weight to kg.
+ */
+function normalizeUnits(manifest) {
+  const newManifest = { ...manifest };
+  if (newManifest.unit === "lb") {
+    newManifest.weight = newManifest.weight * 0.45;
+    newManifest.unit = "kg";
+  }
+  return newManifest;
+}
+
+/**
+ * 2. validateManifest: The rigorous Gatekeeper.
+ * Now uses Number.isInteger() and Number.isNaN() per test requirements.
+ */
+function validateManifest(manifest) {
+  const errors = {};
+  const schema = ["containerId", "destination", "weight", "unit", "hazmat"];
+
+  schema.forEach(prop => {
+    // First check: Is the property even there?
+    if (!manifest.hasOwnProperty(prop)) {
+      errors[prop] = "Missing";
+      return; // Move to next property
+    }
+
+    const value = manifest[prop];
+
+    // Second check: Is the value valid based on its specific rules?
+    if (prop === "containerId") {
+      if (typeof value !== "number" || value <= 0 || !Number.isInteger(value)) {
+        errors.containerId = "Invalid";
+      }
+    } else if (prop === "destination") {
+      if (typeof value !== "string" || value.trim().length === 0) {
+        errors.destination = "Invalid";
+      }
+    } else if (prop === "weight") {
+      if (typeof value !== "number" || value <= 0 || Number.isNaN(value)) {
+        errors.weight = "Invalid";
+      }
+    } else if (prop === "unit") {
+      if (value !== "kg" && value !== "lb") {
+        errors.unit = "Invalid";
+      }
+    } else if (prop === "hazmat") {
+      if (typeof value !== "boolean") {
+        errors.hazmat = "Invalid";
+      }
+    }
+  });
+
+  return errors;
+}
+
+/**
+ * 3. processManifest: The Orchestrator.
+ * Follows the strict 2-call logging rule.
+ */
+function processManifest(manifest) {
+  const errors = validateManifest(manifest);
+  const isValid = Object.keys(errors).length === 0;
+
+  if (isValid) {
+    console.log(`Validation success: ${manifest.containerId}`);
+    const normalized = normalizeUnits(manifest);
+    console.log(`Total weight: ${normalized.weight} kg`);
+  } else {
+    // Requirement 21 & 25: Two distinct console.log calls
+    console.log(`Validation error: ${manifest.containerId}`);
+    console.log(errors);
+  }
+}
+
+** end of script.js **
+

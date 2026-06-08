@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aeon Learning Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header with logo + nav -->
+  <header id="header">
+    <img id="header-img" src="https://via.placeholder.com/60x60/00d4ff/000?text=Aeon" alt="Aeon Learning Center Logo">
+    <nav id="nav-bar">
+      <a class="nav-link" href="#features">Features</a>
+      <a class="nav-link" href="#video-section">Video</a>
+      <a class="nav-link" href="#pricing">Pricing</a>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <!-- Features -->
+    <section id="features">
+      <h2>Features</h2>
+      <div class="feature">
+        <h3>AI-Powered Learning</h3>
+        <p>Personalized paths using real-time feedback.</p>
+      </div>
+      <div class="feature">
+        <h3>Community First</h3>
+        <p>Learn with peers, mentors, and real projects.</p>
+      </div>
+      <div class="feature">
+        <h3>Flexible & Accessible</h3>
+        <p>Any device, any pace, any dream.</p>
+      </div>
+    </section>
+
+    <!-- Video -->
+    <section id="video-section">
+      <h2>How It Works</h2>
+      <iframe 
+        id="video" 
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+        title="Aeon Demo Video" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing">
+      <h2>Pricing</h2>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Basic</h3>
+          <p>$3/month</p>
+          <ul>
+            <li>Core courses</li>
+            <li>Community access</li>
+            <li>Email support</li>
+          </ul>
+          <button>Select</button>
+        </div>
+        <div class="price-card">
+          <h3>Pro</h3>
+          <p>$9/month</p>
+          <ul>
+            <li>Everything in Basic</li>
+            <li>1-on-1 mentoring</li>
+            <li>Project reviews</li>
+          </ul>
+          <button>Select</button>
+        </div>
+        <div class="price-card">
+          <h3>Elite</h3>
+          <p>$18/month</p>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Custom curriculum</li>
+            <li>Priority support</li>
+          </ul>
+          <button>Select</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section id="form-section">
+      <h2>Stay Updated</h2>
+      <form id="form" action="https://www.freecodecamp.org/email-submit" method="POST">
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          placeholder="Enter your email address" 
+          required
+        >
+        <input type="submit" id="submit" value="Submit">
+      </form>
+    </section>
+  </main>
+
+</body>
+</html>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0015;
+  color: #e0e0ff;
+  line-height: 1.6;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #111133;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  border-bottom: 2px solid #00d4ff33;
+}
+
+#header-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+#nav-bar {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: #00d4ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+main {
+  margin-top: 80px;
+  padding: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h2 {
+  text-align: center;
+  color: #00d4ff;
+  margin-bottom: 2rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.feature, .price-card {
+  background: rgba(26, 26, 58, 0.7);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.pricing-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+#video-section {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+#form {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+#email {
+  padding: 0.8rem;
+  width: 300px;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: 1px solid #00d4ff;
+  background: #1a1a3a;
+  color: white;
+}
+
+#submit {
+  padding: 0.8rem 2rem;
+  background: #00d4ff;
+  border: none;
+  border-radius: 4px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  #header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  #nav-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+  .pricing-grid {
+    flex-direction: column;
+  }
+}

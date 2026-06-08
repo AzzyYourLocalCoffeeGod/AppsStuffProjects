@@ -1,0 +1,35 @@
+** start of script.js **
+
+// 3. Declare a variable outside the function
+let email = "apple.pie@example.com";
+
+// 1. & 2. The function
+function maskEmail(email) {
+  const atIndex = email.indexOf("@");
+  
+  // Username = everything before @
+  const username = email.slice(0, atIndex);
+  
+  // Domain = everything after @ (including the @)
+  const domain = email.slice(atIndex);
+  
+  // Edge case: username too short → return original
+  if (username.length <= 2) {
+    return email;
+  }
+  
+  // First char + asterisks (middle part) + last char
+  const maskedUsername = 
+    username[0] + 
+    "*".repeat(username.length - 2) + 
+    username[username.length - 1];
+  
+  // 2. Put masked username + domain back together
+  return maskedUsername + domain;
+}
+
+// 4. Call the function with the email variable and log the result
+console.log(maskEmail(email));
+
+** end of script.js **
+

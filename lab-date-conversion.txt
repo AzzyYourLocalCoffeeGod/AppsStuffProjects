@@ -1,0 +1,29 @@
+** start of script.js **
+
+// 1. Initialize the Temporal Shard
+const currentDate = new Date();
+
+// 2. Format for the initial log (uses the default string representation)
+const currentDateFormat = "Current Date and Time: " + currentDate;
+console.log(currentDateFormat);
+
+// 3. The Numeric Transmutation (MM/DD/YYYY)
+function formatDateMMDDYYYY(dateObj) {
+  // We use 'en-US' to ensure month/day/year order
+  const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
+  const formatted = dateObj.toLocaleDateString('en-US', options);
+  
+  return `Formatted Date (MM/DD/YYYY): ${formatted}`;
+}
+
+// 4. The Linguistic Transmutation (Month Day, Year)
+function formatDateLong(dateObj) {
+  // 'long' for month gives us the full name (e.g., September)
+  const options = { month: 'long', day: 'numeric', year: 'numeric' };
+  const formatted = dateObj.toLocaleDateString('en-US', options);
+  
+  return `Formatted Date (Month Day, Year): ${formatted}`;
+}
+
+** end of script.js **
+

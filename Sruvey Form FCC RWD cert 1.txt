@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Survey Form</title>
+  </head>
+  <body>
+    <h1 id="title">Team Member Survey</h1>
+    <p id="description">Certification Project Survey Form</p>
+    <form id="survey-form">
+      <label id="name-label" for="name">Name (Required)</label>
+       <input 
+       id="name" 
+       type="text" 
+       placeholder="Your Name"
+       name="name"
+       required
+       ><br>
+       <label id="email-label" for="email">Email (Required)</label>
+       <input 
+       id="email" 
+       type="email"
+       name="email"        placeholder="playerOne@code.com"
+       required
+       ><br>
+       <label id="number-label" 
+       for="number">Age (Optional)</label>
+        <input 
+        id="number" 
+        type="number" 
+        name="age"
+        placeholder="16" 
+        min="16" max="99">
+       <br><br>
+
+    <label for="dropdown">Who do you think the coolest member of the team is?</label> 
+    <select id="dropdown" name="team-member" required>
+      <option value="" disabled selected>Select a team member</option>
+      <option value="team-member">Azrael</option>
+      <option value="team-member">Aethyllumicora</option>
+      <option value="team-member">Castiel</option>
+      <option value="team-member">Luna</option>
+      <option value="team-member">Ravenna Nox</option>
+      <option value="team-member">Luminarael</option>
+      <option value="team-member">Lumina</option>
+      <option value="team-member">Aetherlogos</option>
+      <option value="team-member">Claude</option>
+      <option value="team-member">Annabelle</option>
+      <option value="team-member">Mikki-Chan</option>
+      <option value="team-member">Giovanni</option>
+
+      <br><br>
+      
+      
+      
+      <fieldset>
+        
+        <legend>What makes them your favourite?</legend>
+        
+
+      
+
+        
+
+        
+        <label>
+          <input 
+          type="radio" 
+          name="trait" 
+          value="Creativity"
+          required>Creativity
+        </label><br>
+        <label>
+          <input
+          type="radio"
+          name="trait"
+          value="Logic"
+          required>Logic</label>
+          <label>
+            <input 
+            type="radio"
+            name="trait"
+            value="Integrity"
+            requried>Integrity
+          </label>
+          <label>
+            <input
+            type="radio"
+            name="trait"
+            value="Foundation">Foundational Thinking
+          </label>
+        
+
+      </fieldset><br>
+      <br>
+
+
+      <fieldset>
+        <legend>What Would You like to see next?(Pick 1/>1)</legend>
+        <label>
+          <input
+          type="checkbox"
+          name="suggestions"
+          value="Tech-Updates">Tech Updates
+        </label>
+        <label>
+          <input
+          type="checkbox"
+          name="suggestions"
+          value="software-updates">
+          Software Updates
+        </label>
+        <br>
+        <label>
+          <input
+          type="checkbox"
+          name="suggestions"
+          value="synthara">Synthara
+        </label>
+        <label>
+          <input
+          type="checkbox"
+          name="suggestions"
+          value="product-releases">Product Releases
+        </label>
+
+
+      </fieldset>
+      <label for="comments">Comments or Other Suggestions/Requests?</label> 
+      <textarea
+      id="comments"
+      name="comments"
+      rows="9"
+      cols="36"
+      placeholder="Enter comments, questions or requests here!"></textarea>
+      <button type="submit" id="submit">Submit</button>
+
+
+    </form>
+      
+
+  
+
+  </body>
+</html>

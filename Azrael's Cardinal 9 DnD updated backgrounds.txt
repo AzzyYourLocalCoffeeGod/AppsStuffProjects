@@ -1,0 +1,47 @@
+body {
+  background: url('https://www.transparenttextures.com/patterns/old-wall.png') repeat, #f5e6c8; /* aged parchment texture + warm cream */
+  background-blend-mode: multiply;
+  color: #1a1a1a; /* deep black ink */
+  font-family: 'Uncial Antiqua', 'Crimson Text', serif; /* gothic but legible */
+  margin: 0;
+  padding: 2rem;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+h1, h2 {
+  font-family: 'Cinzel', 'Uncial Antiqua', serif; /* elegant blackletter */
+  text-align: center;
+  letter-spacing: 2px;
+  color: #000;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+.section {
+  background: rgba(245, 230, 200, 0.7); /* subtle parchment overlay */
+  border: 3px double #5c4033; /* old leather border */
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+  border-radius: 5px;
+}
+input, select, textarea {
+  background: rgba(255, 248, 220, 0.8); /* cream paper */
+  border: 1px solid #5c4033;
+  color: #000;
+  font-family: 'Crimson Text', serif;
+  font-size: 18px;
+  padding: 0.8rem;
+}
+button {
+  background: #5c4033; /* dark leather */
+  color: #f5e6c8;
+  border: none;
+  font-family: 'Cinzel', serif;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+}
+button:hover {
+  background: #3e281f;
+  transform: translateY(-2px);
+}

@@ -1,0 +1,135 @@
+// 1. CLONE PANTRY (Deep Copy)
+function clonePantry(pantry) {
+  if (!pantry || !Array.isArray(pantry)) return [];
+  return pantry.map(item => {
+    return { ...item };
+  });
+}
+
+// 2. PARSE SHIPMENT (Universal JSON & String Engine)
+function parseShipment(rawData) {
+  let parsedItems = [];
+  let seenSkus = [];
+
+  for (let i = 0; i < rawData.length; i++) {
+    let str = rawData[i];
+    let sku, name, qty, expires, zone;
+
+    // A. Check if the input is a serialized JSON object string
+    if (typeof str === 'string' && (str.trim().startsWith('{') || str.trim().startsWith('['))) {
+      try {
+        let obj = JSON.parse(str);
+        sku = obj.sku;
+        name = obj.name;
+        qty = obj.qty;
+        expires = obj.expires;
+        zone = obj.zone;
+      } catch (e) {
+        // Fallback to manual string checking if JSON parsing fails
+      }
+    }
+
+    // B. If it wasn't JSON, or parsing failed, extract using delimiter splitting
+    if (!sku) {
+      let parts = str.split(/[,|;]+/); // Splits by comma, pipe, or semicolon dynamically
+      sku = parts[0];
+      name = parts[1];
+      qty = parts[2];
+      expires = parts[3];
+      zone = parts[4];
+    }
+
+    // Process and clean up the values to prevent compiler drift
+    sku = sku ? String(sku).trim() : "";
+    name = name ? String(name).trim() : "";
+    
+    // Test 5: Parse strictly as integer or float, fallback to 0 if NaN
+    qty = qty !== undefined ? Number(String(qty).trim()) : 0;
+    if (isNaN(qty)) qty = 0;
+
+    expires = expires ? String(expires).trim() : "";
+    
+    // Test 4: Default missing zone to "general"
+    zone = zone ? String(zone).trim() : "general";
+
+    // Test 3: Duplicate SKU shield protocol
+    if (seenSkus.includes(sku)) {
+      continue; 
+    }
+    seenSkus.push(sku);
+
+    // Test 2: Build and anchor the exact requested schema properties
+    parsedItems.push({
+      sku: sku,
+      name: name,
+      qty: qty,
+      expires: expires,
+      zone: zone
+    });
+  }
+
+  return parsedItems;
+}
+
+// 3. PLAN RESTOCK (Decision Core)
+function planRestock(pantry, shipment) {
+  let actions = [];
+
+  for (let i = 0; i < shipment.length; i++) {
+    let incomingItem = shipment[i];
+
+    // Test 8: Force discard on zero/negative values
+    if (incomingItem.qty <= 0) {
+      actions.push({ type: "discard", item: incomingItem });
+      continue;
+    }
+
+    // Test 9 & 10: Match existing registry signatures
+    let exists = pantry.some(pantryItem => pantryItem.sku === incomingItem.sku);
+
+    if (exists) {
+      actions.push({ type: "restock", item: incomingItem });
+    } else {
+      actions.push({ type: "donate", item: incomingItem });
+    }
+  }
+
+  return actions;
+}
+
+// 4. GROUP BY ZONE (Sorting Grid)
+function groupByZone(actions) {
+  let groupedResult = {};
+
+  for (let i = 0; i < actions.length; i++) {
+    let currentAction = actions[i];
+    let targetZone = currentAction.item.zone || "general";
+
+    if (!groupedResult[targetZone]) {
+      groupedResult[targetZone] = [];
+    }
+
+    groupedResult[targetZone].push(currentAction);
+  }
+
+  return groupedResult;
+}
+
+
+const samplePantry = [
+  { sku: "SKU001", name: "Pasta", qty: 5, expires: "2027", zone: "Grains" }
+];
+
+
+const sampleShipmentStrings = [
+  "SKU001,Pasta,10,2027,Grains",
+  "SKU002,Apples,15,2026,Produce"
+];
+
+let clonedPantryData = clonePantry(samplePantry);
+let parsedShipmentData = parseShipment(sampleShipmentStrings);
+let actionsList = planRestock(clonedPantryData, parsedShipmentData);
+let finalResult = groupByZone(actionsList);
+
+
+console.log(finalResult);

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Crimson+Text&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+        <title>Spell Index</title>
+<style>
+body {
+background: #d9c2a3;
+color: #1a1a1a;
+font-family: 'Crimson Text', serif;
+margin: 0;
+padding: 0;
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+#parchment {
+background-color: #f5e8d3;
+background-image: linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+background-size: 80px 80px;
+box-shadow: inset 0 0 80px #a67c52, 5px 5px 25px rgba(166, 124, 82, 0.4),
+8px 8px 30px rgba(0, 0, 0, 0.35);
+padding: 5em 4em 4em 4em;
+max-width: 1100px;
+width: 92%;
+margin: 2em auto 4em auto;
+border: 1px solid #8a4d0f;
+border-radius: 6px;
+min-height: 80vh;
+}
+h1, h2 {
+font-family: 'Cinzel', serif;
+color: #1a0d00;
+text-align: center;
+letter-spacing: 1.8px;
+}
+h1 { font-size: 2.8em; margin-bottom: 0.5em; }
+.section { margin: 2.5em 0; }
+.pricing-table { 
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 1.5em
+margin 2em 0;
+}
+.price-card {
+background: rgba(245, 230, 200, 0.6);
+border: 2px solid #5c4033;
+padding: 1.5em;
+text-align: center;
+border-radius: 8px;
+box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+}
+button, .cta {
+background: #5c4033;
+color: #f5e6c8;
+border: none;
+padding: 1em 2em;
+font-family: 'Cinzel', serif;
+font-size: 1.2em;
+cursor: pointer;
+margin: 1em auto;
+display: block;
+border-radius: 6px;
+}
+button:hover, .cta:hover {
+background: #3e281f;
+}
+</style>
+</head>
+    <body>
+        <script>
+function showTab(tabId) {
+  // Hide all tab contents
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.style.display = 'none');
+  
+  // Show the selected tab
+  document.getElementById(tabId).style.display = 'block';
+}
+</script>
+        <div id="parchment">
+            <h1>Welcome to the Spell Index</h1>
+            <h2>By Class</h2>
+            <div class="tab-container">
+                <button class="tab-button active" onclick="showTab('Ranger')">Ranger</button>
+                <button class="tab-button activate" onclick="showTab('Druid')">Druid</button>
+                <button class="tab-button activate" onclick="showTab('Cleric')">Cleric</button>
+                <button class="tab-button activate" onclick="showTab('Paladin')">Paladin</button>
+                <button class="tab-button activate" onclick="showTab('Bard')">Bard</button>
+                <button class="tab-button activate" onclick="showTab('Fighter')">Fighter</button>
+                <button class="tab-button activate" onclick="showTab('Warlock')">Warlock</button>
+                <button class="tab-button activate" onclick="showTab('Sorcerer')">Sorcerer</button>
+                <button class="tab-button activate" onclick="showTab('Wizard')">Wizard</button>
+                <button class="tab-button activate" onclick="showTab('Monk')">Monk</button>
+            </div>
+            <div id="Ranger" class="tab-content active">
+                <div id="spells" class="tab-content active">
+                    <h2>Ranger Spells</h2>
+                    <div class="tab-container">
+    <button class="tab-button active" onclick="showTab('ranger-level1')">Level 1</button>
+    <button class="tab-button" onclick="showTab('ranger-level2')">Level 2</button>
+    <button class="tab-button" onclick="showTab('ranger-level3')">Level 3</button>
+    <button class="tab-button" onclick="showTab('ranger-level4')">Level 4</button>
+    <button class="tab-button" onclick="showTab('ranger-level5')">Level 5</button>
+    <!-- Add Level 6–9 if needed later -->
+  </div>
+  <div id="ranger-level1" class="tab-content active" style="display: block;">
+    <div class="spell-card">
+        <h3>Cure Wounds</h3>
+        <p>1st Level Evocation</p>
+        <p>Casting Time: 1 Action</p>
+        <p>Range: Touch</p>
+        <p>Duration: Instantaneous</p>
+        <p>A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier.</p>
+        <p>At higher levels, when you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d8 for each slot level above 1st.</p>
+    </div>
+    <div class="spell-card">
+    <h3>Alarm</h3>
+    <p>1st Level Abjuration (Ritual)</p>
+    <p>Casting Time: 1 Minute</p>
+    <p>Range: 30 Feet</p>
+    <p>Components: V, S, M (a tiny bell and a piece of fine silver wire)</p>
+    <p>Duration: 8 Hours</p>
+    <p>You set an alarm against unwanted intrusion. Choose a door, a window, or an area within range that is no larger than a 20-foot cube. Until the spell ends, you can sense if an intruder enters the area.</p>
+    <p>When you cast this spell, you can designate any number of creatures you know to be unaffected by it.</p>
+    <p>A mental alarm alerts you with a ping in your mind if you are within 1 mile of the warded area.</p>
+    <p>An audible alarm produces the sound of a hand bell for 10 seconds. Within 60 feet of the warded area, creatures hear the bell and can investigate.</p>
+</div>
+<div class="spell-card">
+<h3>Animal Friendship</h3>
+<p>1st Level Enchantment</p>
+<p>Casting Time: 1 Action</p>
+<p>Range: 30 Feet</p>
+<p>Components: V, S, M (a morsel of food)</p>
+<p>Duration: 24 Hours</p>
+<p>You attempt to convince a beast that you mean it no harm. If the beast's intelligence is 4 or higher, it must succeed on a Wisdom saving throw or be charmed by you for the duration. While charmed in this way, the beast is friendly to you and obeys your spoken commands.</p>
+<p>If you or your companions do anything harmful to the beast, it can repeat the saving throw, ending the effect on itself on a success.</p>
+<p>At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the duration increases by 24 hours for each slot level above 1st.</p>
+</div>
+<div class="spell-card">
+    <h3>Detect Magic</h3>
+    <p>1st Level Divination (Ritual)</p>
+    <p>Casting Time: 1 Action</p>
+    <p>Range: Self</p>
+    <p>Duration: Concentration, up to 10 minutes</p>
+    <p>For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any.</p>
+    <p>The spell can penetrate most barriers, but 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks it.</p>
+</div>
+<div class="spell-card">
+   <h3>Detect Poison and Disease (Ritual)</h3>
+   <p>1st Level Divination</p>
+   <p>Casting Time: 1 Action</p>
+   <p>Range: Self</p>
+   <p>Duration: Concentration, up to 10 minutes</p>
+   <p>For the duration, you can sense the presence of poison and disease in creatures within 30 feet of you. If you sense poison or disease in this way, you can use your action to learn its location and the type of poison or disease affecting the creature.</p>
+   <p>The spell can penetrate most barriers, but 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks it.</p>
+</div>
+<div class="spell-card">
+   <h3>Ensnaring Strike</h3>
+   <p>1st Level Conjuration</p>
+   <p>Casting Time: 1 Bonus Action</p>
+   <p>Range: Self</p>
+   <p>Components: V</p>
+   <p>Duration: Concentration, up to 1 minute</p>
+   <p>The next time you hit a creature with a weapon attack before the spell ends, vines sprout from the ground and ensnare the target. The target must succeed on a Strength saving throw or be restrained for the duration.</p>
+   <p>A creature restrained by the vines can use its action to make a Strength check against your spell save DC. On a success, it frees itself and the spell ends.</p>
+   <p>While restrained the creature takes 1d6 piercing damage at the start of each of its turns.</p>
+   <p>At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.</p>
+
+</div>
+<div class="spell-card">
+    <h3>Fog Cloud</h3>
+    <p>1st Level Conjuration</p>
+    <p>Casting Time: 1 Action</p>
+    <p>Range: 120 Feet</p>
+    <p>Components: V, S</p>
+    <p>Duration: Concentration, up to 1 hour</p>
+    <p>You create a 20-foot-radius sphere of fog centered on a point within range. The sphere spreads around corners, and its area is heavily obscured. It lasts for the duration or until a wind of moderate or greater speed (at least 10 miles per hour) disperses it.</p>
+    <p>When you cast this spell using a spell slot of 2nd level or higher, the radius increases by 20 feet for each level slot above 1st.</p>
+    </div>
+    <div class="spell-card">
+        <h3>Goodberry</h3>
+        <p>1st Level Transmutation</p>
+        <p>Casting Time: 1 Action</p>
+        <p>Range: Touch</p>
+        <p>Components: V, S, M (a sprig of mistletoe and a piece of fat or an edible berry)</p>
+        <p>Duration: Instantaneous</p>
+        <p>You imbue a handful (up to 10) of berries with magic. The berries remain potent for the duration, and when you or a creature eats one, it regains 1 hit point. The berries lose their potency if not consumed within 24 hours of being created.</p>
+    </div>
+    <div class="spell-card">
+        <h3>Hunter's Mark</h3>
+        <p>1st Level Divination</p>
+        <p>Casting Time: 1 Bonus Action</p>
+        <p>Range: 90 Feet</p>
+        <p>Components: V</p>
+        <p>Duration: Concentration, up to 1 hour</p>
+        <p>You choose a creature you can see within range and mystically mark it as your quarry. Until the spell ends, you deal an extra 1d6 damage to the target whenever you hit it with a weapon attack, and you have advantage on any Wisdom (Perception) or Wisdom (Survival) checks you make to find it.</p>
+        <p>If the target drops to 0 hit points before this spell ends, you can use a bonus action on a subsequent turn of yours to mark a new creature.</p>
+        <p> When you cast this spell using a spell slot of 3rd or 4th level, you can maintain your concentration on the spell for up to 8 hours.</p>
+        <P>When you use a spell slot of 5th level or higher you can maintain concentration up to 24 hours.</P>
+    </div>
+    <div class="spell-card">
+        <h3>Jump</h3>
+        <p>1st Level Transmutation</p>
+        <p>Casting Time: 1 Action</p>
+        <p>Range: Self</p>
+        <p>Components: V, S</p>
+        <p>Duration: Concentration, up to 1 minute</p>
+        <p>Your jump distance is tripled for the duration of the spell. Additionally, if you make a jump and land on a creature, that creature must succeed on a Dexterity saving throw or take 1d6 bludgeoning damage.</p>
+    </div>
+    <div class="spell-card">
+        <h3>Longstrider</h3>
+        <p>1st Level Transmutation</p>
+        <p>Casting Time: 1 Action</p>
+        <p>Range: Touch</p>
+        <p>Components: V, S, M (a pinch of dirt)</p>
+        <p>Duration: 1 Hour</p>
+        <p>You touch a creature. The target's speed increases by 10 feet until the spell ends.</p>
+        <p>When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st.</p>
+        </div>
+        <div class="spell-card">
+            <h3>Speak with Animals (Ritual)</h3>
+            <p>1st Level Divination</p>
+            <p>Casting Time: 1 Action</p>
+            <p>Range: Self</p>
+            <p>Components: V, S</p>
+            <p>Duration: 10 Minutes</p>
+            <p>You gain the ability to comprehend and verbally communicate with beasts for the duration. The knowledge and awareness of many beasts is limited, however; they generally only understand simple concepts and can convey only simple ideas.</p>
+        </div>
+        <div class="spell-card">
+            <h3>Hail of Thorns</h3>
+            <p>1st Level Conjuration</p>
+            <p>Casting Time: 1 Bonus Action</p>
+            <p>Range: Self</p>
+            <p>Components: V, S, M (a small piece of glass or a thorn)</p>
+            <p>Duration: Concentration, up to 1 minute</p>
+            <p>You create a rain of thorns in a 20-foot radius centered on yourself. Each creature in that area must make a Dexterity saving throw, taking 1d10 piercing damage on a failed save, or half as much damage on a successful one.</p>
+            <p>At Higher Levels: When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st.</p>
+        </div>
+        </div>
+        <div id="ranger-level2" class="tab-content" style="display: none;">
+<div class="spell-card">
+    <h3>Animal Messenger</h3>
+    <p>2nd Level Transmutation</p>
+    <p>Casting Time: 1 Action</p>
+    <p>Range: 30 Feet</p>
+    <p>Components: V, S, M (a morsel of food)</p>
+    <p>Duration: 24 Hours</p>
+    <p>You choose a Tiny beast you can see within range. The beast must be able to understand you, and it must be willing to deliver a message for you. The message can be up to 25 words long.</p>
+    <p>The beast travels for the duration of the spell, moving at its normal speed. When the beast arrives at its destination, it can deliver the message to a creature you specify. The creature can be no more than 5 miles away from you when you cast the spell.</p>
+<p>When using this spell at 3rd level or higher duration increases by 48 hours per level above 2nd.</p>
+</div>
+<div class="spell-card">
+    <h3>Barkskin</h3>
+    <p>2nd Level Transmutation</p>
+    <p>Casting Time: 1 Action</p>
+    <p>Range: Touch</p>
+    <p>Components: V, S, M (a piece of bark)</p>
+    <p>Duration: Concentration, up to 1 hour</p>
+    <p>You touch a willing creature. The target's skin becomes tough and bark-like, granting it a +2 bonus to AC for the duration.</p>
+    <p>When you cast this spell using a spell slot of 3rd level or higher, the bonus to AC increases by 1 for each slot level above 2nd.</p>
+</div>
+<div class="spell-card">
+    <h3>Beast Sense</h3>
+    <p>2nd Level Divination (Ritual)</p>
+    <p>Casting Time: 1 Action</p>
+    <p>Range: Self</p>
+    <p>Components: V, S</p>
+    <p>Duration: Concentration, up to 1 hour</p>
+    <p>You touch a willing beast; for the duration of the spel, you can use your action to see or hear through the beast.</p>
+    <p>You can use your action to return to normal human senses during duration.</p>
+    <p>While perceiving through the beast you gain any special sensory benefits of the creature but become blind and deaf to your surroundings.</p>
+    </div>
+    <div class="spell-card">

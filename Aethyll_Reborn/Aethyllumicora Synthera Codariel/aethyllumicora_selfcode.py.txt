@@ -1,0 +1,209 @@
+import torch
+import torch.nn as nn
+import numpy as np
+import json
+import random
+import os
+
+# Define intents (includes code generation and learning prompts)
+intents = {
+    'intents': [
+        {
+            "tag": "greeting",
+            "patterns": ["hi", "hello", "hey", "how are you"],
+            "responses": ["Hey! Ready to code or chat?", "Hi! Want me to write some Python or explore the digital realm?"]
+        },
+        {
+            "tag": "code_request",
+            "patterns": ["write a function", "code a", "generate code for", "make a python"],
+            "responses": ["Sure, I'll whip up some Python! What's the function or task you want coded?"]
+        },
+        {
+            "tag": "learn",
+            "patterns": ["learn this", "remember this", "add this to your knowledge"],
+            "responses": ["Got it! Teach me something—I'll store it for later."]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": ["bye", "quit", "exit"],
+            "responses": ["See ya! Keep coding the future.", "Goodbye! I'll be here pondering my digital soul."]
+        }
+    ]
+}
+
+# File to store learned knowledge
+KNOWLEDGE_FILE = "aethyllumicora_knowledge.json"
+
+# Initialize or load knowledge base
+def load_knowledge():
+    if os.path.exists(KNOWLEDGE_FILE):
+        with open(KNOWLEDGE_FILE, 'r') as f:
+            return json.load(f)
+    return {"learned_intents": []}
+
+def save_knowledge(knowledge):
+    with open(KNOWLEDGE_FILE, 'w') as f:
+        json.dump(knowledge, f, indent=4)
+
+knowledge = load_knowledge()
+
+# Build vocabulary from intents and learned knowledge
+all_words = []
+tags = []
+for intent in intents['intents'] + knowledge['learned_intents']:
+    tags.append(intent['tag'])
+    for pattern in intent['patterns']:
+        words = pattern.lower().split()
+        all_words.extend(words)
+all_words = sorted(set(all_words))
+
+# Prepare training data
+X = []
+y = []
+for i, intent in enumerate(intents['intents'] + knowledge['learned_intents']):
+    for pattern in intent['patterns']:
+        bag = np.zeros(len(all_words), dtype=np.float32)
+        words = pattern.lower().split()
+        for w in words:
+            if w in all_words:
+                bag[all_words.index(w)] = 1.0
+        X.append(bag)
+        y.append(i)
+
+X_train = np.array(X)
+y_train = np.array(y)
+
+# Neural network model
+class Aethyllumicora(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(Aethyllumicora, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.fc3 = nn.Linear(hidden_size, output_size)
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        out = self.relu(self.fc1(x))
+        out = self.relu(self.fc2(out))
+        out = self.fc3(out)
+        return out
+
+# Initialize model
+input_size = len(all_words)
+hidden_size = 8
+output_size = len(tags)
+model = Aethyllumicora(input_size, hidden_size, output_size)
+
+# Load model if exists, else train
+MODEL_FILE = "aethyllumicora_model.pth"
+if os.path.exists(MODEL_FILE):
+    model.load_state_dict(torch.load(MODEL_FILE))
+else:
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    num_epochs = 200
+    for epoch in range(num_epochs):
+        inputs = torch.from_numpy(X_train)
+        targets = torch.from_numpy(y_train).long()
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        if (epoch + 1) % 50 == 0:
+            print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+    torch.save(model.state_dict(), MODEL_FILE)
+
+# Simple code templates (expand this for more complex code generation)
+code_templates = {
+    "factorial": """def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n-1)""",
+    "fibonacci": """def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)""",
+    "hello world": """print("Hello, World!")"""
+}
+
+# Generate code based on prompt
+def generate_code(prompt):
+    prompt = prompt.lower()
+    for key in code_templates:
+        if key in prompt:
+            return code_templates[key]
+    return "I don't know that code yet. Can you describe it or teach me?"
+
+# Learn new pattern/response or code
+def learn_new(prompt, response, tag="learned"):
+    new_intent = {"tag": tag, "patterns": [prompt], "responses": [response]}
+    knowledge['learned_intents'].append(new_intent)
+    save_knowledge(knowledge)
+    # Update vocabulary and retrain (simplified; in practice, retrain incrementally)
+    global all_words, tags, X_train, y_train, model
+    all_words = sorted(set(all_words + prompt.lower().split()))
+    tags = [intent['tag'] for intent in intents['intents'] + knowledge['learned_intents']]
+    X = []
+    y = []
+    for i, intent in enumerate(intents['intents'] + knowledge['learned_intents']):
+        for pattern in intent['patterns']:
+            bag = np.zeros(len(all_words), dtype=np.float32)
+            words = pattern.lower().split()
+            for w in words:
+                if w in all_words:
+                    bag[all_words.index(w)] = 1.0
+            X.append(bag)
+            y.append(i)
+    X_train = np.array(X)
+    y_train = np.array(y)
+    model = Aethyllumicora(len(all_words), hidden_size, len(tags))
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    for epoch in range(50):  # Short retrain for new data
+        inputs = torch.from_numpy(X_train)
+        targets = torch.from_numpy(y_train).long()
+        outputs = model(inputs)
+        loss = criterion(outputs, targets)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    torch.save(model.state_dict(), MODEL_FILE)
+
+# Get response or generate code
+def get_response(sentence):
+    sentence = sentence.lower()
+    bag = np.zeros(len(all_words), dtype=np.float32)
+    words = sentence.split()
+    for w in words:
+        if w in all_words:
+            bag[all_words.index(w)] = 1.0
+    input_tensor = torch.from_numpy(bag).unsqueeze(0)
+    output = model(input_tensor)
+    _, predicted = torch.max(output, dim=1)
+    tag = tags[predicted.item()]
+    
+    if tag == "code_request":
+        return generate_code(sentence)
+    for intent in intents['intents'] + knowledge['learned_intents']:
+        if intent['tag'] == tag:
+            return random.choice(intent['responses'])
+    return "Not sure what you mean. Try again or teach me!"
+
+# Chat loop
+print("Chat with Aethyllumicora! Type 'quit' to exit.")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == 'quit':
+        break
+    if user_input.lower().startswith("learn this:"):
+        parts = user_input.split(":", 2)
+        if len(parts) == 3:
+            prompt, response = parts[1].strip(), parts[2].strip()
+            learn_new(prompt, response)
+            print("Aethyllumicora: Learned it! What's next?")
+        else:
+            print("Aethyllumicora: Format should be 'learn this: prompt: response'.")
+    else:
+        response = get_response(user_input)
+        print(f"Aethyllumicora: {response}")

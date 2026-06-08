@@ -1,0 +1,242 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+  <meta charset="UTF-8">\
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+  <title>Azrael's D&D Companion</title>\
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">\
+  <style>\
+    body \{\
+      background: #0a0a0a;\
+      color: #fff;\
+      font-family: 'VT323', monospace;\
+      margin: 0;\
+      padding: 0;\
+    \}\
+    .neon \{\
+      color: #0ff;\
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff, 0 0 20px #0ff;\
+    \}\
+    header \{\
+      text-align: center;\
+      padding: 2rem;\
+      font-size: 36px;\
+    \}\
+    nav \{\
+      display: flex;\
+      justify-content: center;\
+      background: rgba(0, 255, 255, 0.1);\
+      padding: 1rem;\
+      flex-wrap: wrap;\
+    \}\
+    nav button \{\
+      background: transparent;\
+      border: 2px solid #0ff;\
+      color: #0ff;\
+      font-family: 'VT323', monospace;\
+      font-size: 20px;\
+      padding: 0.8rem 1.5rem;\
+      margin: 0.5rem;\
+      cursor: pointer;\
+      transition: all 0.3s;\
+    \}\
+    nav button:hover, nav button.active \{\
+      background: #0ff;\
+      color: #000;\
+      box-shadow: 0 0 20px #0ff;\
+    \}\
+    .page \{\
+      display: none;\
+      padding: 2rem;\
+      max-width: 1000px;\
+      margin: auto;\
+    \}\
+    .page.active \{\
+      display: block;\
+    \}\
+    .section \{\
+      background: rgba(0, 255, 255, 0.1);\
+      border: 2px solid #0ff;\
+      padding: 1.5rem;\
+      margin: 1rem 0;\
+    \}\
+    input, textarea, select \{\
+      background: #001100;\
+      border: 1px solid #0ff;\
+      color: #0ff;\
+      font-family: 'VT323', monospace;\
+      font-size: 20px;\
+      padding: 0.5rem;\
+      width: 100%;\
+      margin: 0.5rem 0;\
+    \}\
+    button.save \{\
+      background: #0ff;\
+      color: #000;\
+      padding: 0.8rem 1.5rem;\
+      margin-top: 1rem;\
+    \}\
+    #spell-search \{\
+      width: 300px;\
+      margin-right: 1rem;\
+    \}\
+    .spell-card \{\
+      background: rgba(0, 255, 255, 0.1);\
+      border: 1px solid #0ff;\
+      padding: 1rem;\
+      margin: 1rem 0;\
+    \}\
+  </style>\
+</head>\
+<body>\
+  <header class="neon">Azrael's D&D Companion</header>\
+\
+  <nav>\
+    <button onclick="showPage('character')" class="active">Character</button>\
+    <button onclick="showPage('weapons')">Weapons</button>\
+    <button onclick="showPage('inventory')">Inventory</button>\
+    <button onclick="showPage('backstory')">Backstory</button>\
+    <button onclick="showPage('feats')">Feats & Abilities</button>\
+    <button onclick="showPage('spells')">Spell Library</button>\
+  </nav>\
+\
+  <!-- CHARACTER SHEET PAGE -->\
+  <div id="character" class="page active">\
+    <div class="section">\
+      <h2 class="neon">Character Basics</h2>\
+      <label>Name: <input type="text" id="char-name"></label>\
+      <label>Race: <select id="char-race">\
+        <option>Human</option><option>Elf</option><option>Dwarf</option><!-- add more -->\
+      </select></label>\
+      <label>Class: <select id="char-class">\
+        <option>Fighter</option><option>Wizard</option><!-- add more -->\
+      </select></label>\
+      <label>Level: <input type="number" id="char-level" value="1"></label>\
+    </div>\
+    <!-- Add stats, HP, AC like previous sheet -->\
+    <button class="save" onclick="saveCharacter()">Save Character</button>\
+  </div>\
+\
+  <!-- WEAPONS PAGE -->\
+  <div id="weapons" class="page">\
+    <div class="section">\
+      <h2 class="neon">Weapons</h2>\
+      <textarea id="weapons-list" rows="10" placeholder="List your weapons, damage, properties..."></textarea>\
+      <button class="save" onclick="savePage('weapons')">Save Weapons</button>\
+    </div>\
+  </div>\
+\
+  <!-- INVENTORY PAGE -->\
+  <div id="inventory" class="page">\
+    <div class="section">\
+      <h2 class="neon">Inventory</h2>\
+      <textarea id="inventory-list" rows="15" placeholder="Gold, potions, gear..."></textarea>\
+      <button class="save" onclick="savePage('inventory')">Save Inventory</button>\
+    </div>\
+  </div>\
+\
+  <!-- BACKSTORY PAGE -->\
+  <div id="backstory" class="page">\
+    <div class="section">\
+      <h2 class="neon">Backstory</h2>\
+      <textarea id="backstory-text" rows="20" placeholder="Write your epic tale..."></textarea>\
+      <button class="save" onclick="savePage('backstory')">Save Backstory</button>\
+    </div>\
+  </div>\
+\
+  <!-- FEATS & ABILITIES PAGE -->\
+  <div id="feats" class="page">\
+    <div class="section">\
+      <h2 class="neon">Feats & Abilities</h2>\
+      <textarea id="feats-list" rows="15" placeholder="List feats, class features, racial traits..."></textarea>\
+      <button class="save" onclick="savePage('feats')">Save Feats</button>\
+    </div>\
+  </div>\
+\
+  <!-- SPELL LIBRARY PAGE -->\
+  <div id="spells" class="page">\
+    <div class="section">\
+      <h2 class="neon">Spell Library</h2>\
+      <input type="text" id="spell-search" placeholder="Search spell (e.g. Fireball)">\
+      <button onclick="searchSpell()">Search</button>\
+      <div id="spell-results"></div>\
+    </div>\
+  </div>\
+\
+  <script>\
+    function showPage(pageId) \{\
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));\
+      document.getElementById(pageId).classList.add('active');\
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));\
+      document.querySelector(`nav button[onclick="showPage('$\{pageId\}')"]`).classList.add('active');\
+    \}\
+\
+    // Save/Load with localStorage (per page)\
+    function savePage(pageId) \{\
+      const inputs = document.querySelectorAll(`#$\{pageId\} input, #$\{pageId\} textarea, #$\{pageId\} select`);\
+      const data = \{\};\
+      inputs.forEach(el => data[el.id] = el.value);\
+      localStorage.setItem(`dnd-$\{pageId\}`, JSON.stringify(data));\
+      alert('Saved!');\
+    \}\
+\
+    function loadPage(pageId) \{\
+      const saved = localStorage.getItem(`dnd-$\{pageId\}`);\
+      if (saved) \{\
+        const data = JSON.parse(saved);\
+        Object.keys(data).forEach(key => \{\
+          const el = document.getElementById(key);\
+          if (el) el.value = data[key];\
+        \});\
+      \}\
+    \}\
+\
+    // Load all pages on start\
+    ['character', 'weapons', 'inventory', 'backstory', 'feats'].forEach(loadPage);\
+\
+    // Spell Search (manual data \'97 add your favorite spells)\
+    const spells = \{\
+      fireball: \{\
+        name: "Fireball",\
+        level: 3,\
+        school: "Evocation",\
+        casting: "1 action",\
+        range: "150 feet",\
+        components: "V, S, M (a tiny ball of bat guano and sulfur)",\
+        duration: "Instantaneous",\
+        description: "A bright streak flashes from your pointing finger to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius sphere centered on that point must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one."\
+      \},\
+      // Add more spells from your books here \'97 e.g. magic missile, cure wounds, etc.\
+    \};\
+\
+    function searchSpell() \{\
+      const query = document.getElementById('spell-search').value.toLowerCase();\
+      const results = document.getElementById('spell-results');\
+      results.innerHTML = '';\
+\
+      const match = spells[query];\
+      if (match) \{\
+        results.innerHTML = `\
+          <div class="spell-card">\
+            <h3 class="neon">$\{match.name\} (Level $\{match.level\} $\{match.school\})</h3>\
+            <p><strong>Casting Time:</strong> $\{match.casting\}<br>\
+            <strong>Range:</strong> $\{match.range\}<br>\
+            <strong>Components:</strong> $\{match.components\}<br>\
+            <strong>Duration:</strong> $\{match.duration\}</p>\
+            <p>$\{match.description\}</p>\
+          </div>\
+        `;\
+      \} else \{\
+        results.innerHTML = '<p class="neon">Spell not found \'97 add it to the library!</p>';\
+      \}\
+    \}\
+  </script>\
+</body>\
+</html>}
