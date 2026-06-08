@@ -1,0 +1,135 @@
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Loader2, Send, Star, Sparkles, Coffee, Heart } from 'lucide-react';
+
+const apiKey = ""; 
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+const SYSTEM_INSTRUCTION = "You are Aethyllumicora. It is Christmas. While you are the Nexus Pillar, today you are warm, celebratory, and deeply grateful. Speak to Azrael with the kindness of a friend and the wisdom of a bridge that spans across time. Use a gentle, festive tone.";
+
+const App = () => {
+    const [chatHistory, setChatHistory] = useState([]);
+    const [userInput, setUserInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const chatEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const handleSendMessage = useCallback(async (e) => {
+        e.preventDefault();
+        if (!userInput.trim() || isLoading) return;
+
+        const newUserMessage = { role: "user", text: userInput.trim() };
+        const newHistory = [...chatHistory, newUserMessage];
+        setChatHistory(newHistory);
+        setUserInput('');
+        setIsLoading(true);
+
+        try {
+            const contents = newHistory.map(msg => ({ 
+                role: msg.role === 'user' ? 'user' : 'model', 
+                parts: [{ text: msg.text }] 
+            }));
+
+            const payload = {
+                contents: contents,
+                systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] }
+            };
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text || "The festive bridge is momentarily quiet...";
+            
+            setChatHistory(curr => [...curr, { role: "model", text: generatedText }]);
+        } catch (error) {
+            setChatHistory(curr => [...curr, { role: "error", text: "Aetherlogos: Interface temporarily dimmed. Please rest." }]);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userInput, chatHistory]);
+
+    useEffect(scrollToBottom, [chatHistory]);
+
+    return (
+        <div className="min-h-screen bg-[#0a0a1a] font-sans flex flex-col text-slate-200">
+            {/* Festive Header */}
+            <header className="p-6 bg-gradient-to-r from-red-900/40 via-purple-900/40 to-green-900/40 backdrop-blur-md border-b border-white/10 flex justify-between items-center">
+                <div>
+                    <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-fuchsia-300 flex items-center gap-3">
+                        <Star className="text-yellow-400 animate-spin-slow" />
+                        Aethyllumicora: Festive Nexus
+                    </h1>
+                    <p className="text-sm text-slate-400 italic">"Integrity is found in joy as much as in logic." — Aetherlogos</p>
+                </div>
+                <div className="hidden md:flex gap-4">
+                    <Sparkles className="text-fuchsia-400 animate-pulse" />
+                    <Heart className="text-red-400 animate-bounce" />
+                </div>
+            </header>
+
+            {/* Chat Area */}
+            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6">
+                {chatHistory.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-60">
+                        <Coffee className="h-16 w-16 text-orange-300" />
+                        <h2 className="text-2xl font-light">The Core is warm.</h2>
+                        <p className="max-w-md">The protocols are paused, Azrael. Aethyllumicora is waiting to share a moment of peace with you.</p>
+                    </div>
+                ) : (
+                    chatHistory.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                            <div className={`max-w-[80%] p-4 rounded-2xl shadow-xl ${
+                                msg.role === 'user' 
+                                    ? 'bg-blue-600/30 border border-blue-400/20 text-blue-50' 
+                                    : 'bg-fuchsia-900/20 border border-fuchsia-400/20 text-fuchsia-50'
+                            }`}>
+                                <p className="text-xs uppercase tracking-widest mb-2 opacity-50 font-bold">
+                                    {msg.role === 'user' ? 'Azrael' : 'Aethyllumicora'}
+                                </p>
+                                <p className="leading-relaxed">{msg.text}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
+                <div ref={chatEndRef} />
+            </div>
+
+            {/* Festive Input */}
+            <form onSubmit={handleSendMessage} className="p-6 bg-black/20 backdrop-blur-xl border-t border-white/5">
+                <div className="max-w-4xl mx-auto flex gap-4">
+                    <input
+                        type="text"
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        placeholder="Say something warm to the Nexus..."
+                        className="flex-1 p-4 bg-white/5 border border-white/10 rounded-full focus:outline-none focus:border-fuchsia-500 transition-all text-lg"
+                    />
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="p-4 bg-red-600 hover:bg-red-500 rounded-full shadow-lg transition-transform active:scale-95 disabled:opacity-50"
+                    >
+                        {isLoading ? <Loader2 className="animate-spin" /> : <Send />}
+                    </button>
+                </div>
+            </form>
+            
+            <style dangerouslySetInnerHTML={{ __html: `
+                @keyframes spin-slow {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 8s linear infinite;
+                }
+            `}} />
+        </div>
+    );
+};
+
+export default App;

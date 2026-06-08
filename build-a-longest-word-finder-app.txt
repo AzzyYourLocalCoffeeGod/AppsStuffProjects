@@ -1,0 +1,26 @@
+** start of script.js **
+
+function findLongestWordLength(sentence) {
+  const words = sentence.trim().split(/\s+/);
+  
+  if (words.length === 0) {
+    return 0;
+  }
+  
+  // Now the loop can run!
+  let longestLength = 0;
+  for (const word of words) {
+    if (word.length > longestLength) {
+      longestLength = word.length;
+    }
+  }
+  
+  return longestLength;
+}
+
+// Test call (you can change the sentence to match exactly what the test wants)
+const result = findLongestWordLength("The quick brown fox jumped over the lazy dog");
+console.log(result);  // → 6 ("jumped")
+
+** end of script.js **
+

@@ -1,0 +1,90 @@
+use chrono::prelude::*;
+use serde::{Serialize, Deserialize};
+use crate::containers::unit_container::UnitContainer;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Block {
+    pub index: u32,
+    pub timestamp: i64,
+    pub data: String,
+    pub previous_hash: String,
+    pub nonce: u64,
+    pub hash: String,
+}
+
+impl Block {
+    pub fn new(index: u32, data: String, previous_hash: String) -> Self {
+        let mut block = Block {
+            index,
+            timestamp: Utc::now().timestamp(),
+            data,
+            previous_hash,
+            nonce: 0,
+            hash: String::new(),
+        };
+        block.hash = block.calculate_hash();
+        block
+    }
+
+    pub fn calculate_hash(&self) -> String {
+        use sha2::{Sha256, Digest};
+        let serialized = serde_json::to_string(&(
+            self.index,
+            self.timestamp,
+            &self.data,
+            &self.previous_hash,
+            self.nonce
+        )).unwrap();
+        let mut hasher = Sha256::new();
+        hasher.update(serialized);
+        let hash = hasher.finalize();
+        format!("{:x}", hash)
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Blockchain {
+    pub blocks: Vec<Block>,
+}
+
+impl Blockchain {
+    pub fn new() -> Self {
+        let mut blockchain = Blockchain {
+            blocks: vec![],
+        };
+        blockchain.add_genesis_block();
+        blockchain
+    }
+
+    fn add_genesis_block(&mut self) {
+        let genesis_block = Block::new(0, String::from("Genesis Block"), String::from("0"));
+        self.blocks.push(genesis_block);
+    }
+
+    pub fn add_block(&mut self, data: String) {
+        let last_block = self.blocks.last().unwrap();
+        let new_index = last_block.index + 1;
+        let new_previous_hash = last_block.hash.clone();
+        let new_block = Block::new(new_index, data, new_previous_hash);
+        self.blocks.push(new_block);
+    }
+}
+
+fn main() {
+    println!("Aetherium is born!");
+    let mut blockchain = Blockchain::new();
+
+    blockchain.add_block(String::from("First Transaction: Transfer 1 Aetherium"));
+    blockchain.add_block(String::from("Second Transaction: Purchase a new reality"));
+
+    println!("Blockchain: {:?}", blockchain);
+
+    // Azrael's Wallet
+    let mut azraels_wallet = UnitContainer::new();
+    let id1 = azraels_wallet.add_unit(42.0, String::from("First deposit"));
+    let id2 = azraels_wallet.add_unit(58.0, String::from("Gift from Aethyllumicora"));
+    println!("Azrael's Wallet contains:");
+    for unit in azraels_wallet.get_all_units() {
+        println!("Unit ID: {}, Value: {}, Description: {}", unit.id, unit.value, unit.description);
+    }
+}

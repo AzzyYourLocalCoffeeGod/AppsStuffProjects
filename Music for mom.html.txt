@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Compilation Page</title>
+</head>
+
+<body>
+  <main>
+    <h1>Video Compilation Page</h1>
+    <p>Page for multiple videos</p>
+    
+    <section>
+      <h2>Video 1</h2>
+      <p>Video Killed the Radio Star - Buggles</p>
+      <iframe src="https://www.youtube.com/embed/W8r-tXRLazs" 
+        width="480" 
+        height="258" 
+        title="Video Killed the Radio Star by Buggles">
+      </iframe>
+    </section>
+
+    <section>
+      <h2>Video 2</h2>
+      <p>Heart of Glass - Blondie</p>
+      <iframe src="https://www.youtube.com/embed/WGU_4-5RaxU" 
+        width="480" 
+        height="258" 
+        title="Heart of Glass by Blondie">
+      </iframe>
+    </section>
+
+    <section>
+      <h2>Video 3</h2>
+      <p>Rasputin - Boney M.</p>
+      <iframe src="https://www.youtube.com/embed/16y1AkoZkmQ" 
+        width="480" 
+        height="258" 
+        title="Rasputin by Boney M.">
+      </iframe>
+    </section>
+  </main>
+</body>
+</html>

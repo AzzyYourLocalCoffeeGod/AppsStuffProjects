@@ -1,0 +1,14 @@
+** start of script.js **
+
+function chunkArrayInGroups(arr, size) {
+  const chunks = [];
+  let index = 0;
+  while (index < arr.length) {
+    chunks.push(arr.slice(index, index + size));
+    index += size;
+  }
+  return chunks;
+}
+
+** end of script.js **
+

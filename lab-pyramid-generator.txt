@@ -1,0 +1,33 @@
+** start of script.js **
+
+function pyramid(str, num, centered) {
+  let result = "\n";
+
+  if (!centered) {
+    // Test 3: Upright Pyramid (Row 1 to Num)
+    for (let row = 1; row <= num; row++) {
+      result += buildLine(str, row, num);
+    }
+  } else {
+    // Test 4: Inverted Pyramid (Num down to 1)
+    for (let row = num; row >= 1; row--) {
+      result += buildLine(str, row, num);
+    }
+  }
+
+  return result;
+}
+
+// Helper function to keep the "White Space Architecture" clean
+function buildLine(str, row, num) {
+  const charCount = 2 * row - 1;
+  const totalWidth = 2 * num - 1;
+  const spacesCount = Math.floor((totalWidth - charCount) / 2);
+  return " ".repeat(spacesCount) + str.repeat(charCount) + "\n";
+}
+
+console.log("Test 3 (Upright):", JSON.stringify(pyramid("o", 4, false)));
+console.log("Test 4 (Inverted):", JSON.stringify(pyramid("p", 5, true)));
+
+** end of script.js **
+

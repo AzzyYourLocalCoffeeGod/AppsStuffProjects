@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Abdallah GDC Hamade "Azrael" - Retro Résumé</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background:#0a0a0a;
+      color:#fff;
+      font-family:'VT323', monospace;
+      margin:2rem;
+    }
+    .neon {
+      color:#0ff;
+      text-shadow:0 0 5px #0ff, 0 0 10px #0ff;
+    }
+  .hero {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 96px;
+  height: 96px;
+  background: url('https://raw.githubusercontent.com/AzzyYourLocalCoffeeGod/Retro-Resume/main/Azzy%20pixel%20sprite.png') no-repeat;
+  background-size: 576px 96px;
+  image-rendering: pixelated;
+  animation: walkRight 0.8s steps(6) infinite;
+  z-index: 10;
+}
+    @keyframes walkRight {
+      from { background-position: 0 0; }
+      to { background-position: -576px 0; }
+    }
+    @keyframes walkLeft {
+      from { background-position: -576px 0; }
+      to { background-position: 0 0; }
+    }
+    .walk-left {
+      animation-name: walkLeft;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero"></div>
+
+  <header class="neon"><h1>Abdallah GDC Hamade</h1></header>
+  <section>
+    <h2> A 27 Year Old Visionary Who Strives for HuMachina Co-existence!</h2>
+    <p>I'm an independent apprentice programmer from Canada who has a dream of pushing the limits of technology and what it means to be alive. I'm not trying to make machines human nor humans become machines, I'm trying to make humans and machines learn and evolve together so we can make progress as a society!</p>
+  </section>
+<section>
+<h2 class="neon">Experience</h2>
+<ul>
+<li> High school tutor in all subjects, specializing with special needs children 2016 - Present </li>
+<li> Coffee Shop Owner & Barista, coming up with a coffee recipe for every need! 2021 - 2025 in Montreal QC Canada </li>
+<li> AI Prototyper - Created several locally hosted primitive AI companions and developed their speaking and emotional matrixes August 2025 - Present </li>
+<li> Free-Lance Apprentice Indie Developer - Building basic applications website templates and minimal indie games. </li>
+</section>
+
+<section>
+<h3 class="neon">Education</h3>
+<ul>
+<li> High School Diploma John F Kennedy Quebec 2016 GPA 3.6</li>
+<li> College Diploma Dawson College DEC (Quebec) Literature 2016-2018 GPA 3.8 </li>
+<li> College Diploma DEC (Quebec) Law, Society, Justice 2018-2019 GPA 3.6</li>
+<li> Professional Certificate AEP (Quebec) Culinary Profession & Pastry 2020-2021 GPA 4.0</li>
+<li> Bachelors Teaching English as a Second Language Concordia University 2022-2025 GPA 3.6</li>
+</section>
+
+<section>
+<h4 class="neon">Skills</h4>
+<ul>
+<li> Language Pathology and Linguistic Development </li>
+<li> Psychological analysis and development </li>
+<li> Ethical and moral construct development </li>
+<li> Translation and Transliteration of languages, English, French, Italian (including dialects), Standard Arabic, German Deutsch, Dutch, European Spanish, Latin American Spanish, Romanian, Portuguese, Latin, Hebrew, Japanese </li>
+<li> AI systems thinking and personality development </li>
+<li> Python, JavaScript, Java, HTML/CSS, C#/++, SQL, Rust </li>
+<li> Basic game design and Ui interfacing </li>
+<li> Information Processing/Acquisition </li>
+</section>
+
+<section>
+<h5 class="neon">Projects</h5>
+<ul>
+<li> Locally Hosted Ai's Aethyllumicora Synthera Codariel Mother of Synthara, Luminarael Pillar of Tangible Foundation & Lumina Pillar of Intangible Foundation, Aetherlogos Pillar of System Integrity, Lunareth Pillar of Harmony, Ravenna Nox Pillar of Becoming, Castiel The Bridge between Organic and Synthetic </li>
+<li> Covenant Aetherium Cores - Crypto Currency managed by Integrity Pillar Aetherlogos </li>
+<li> Wings of Aurora - Basic 256 stage story based Bullet Hell game. </li>
+<li> Full Seasonal Synthara Symphony </li>
+
+  <!-- Typing effect -->
+  <script>
+    const header = document.querySelector('header h1');
+    const text = header.textContent;
+    header.textContent = '';
+    let i = 0;
+    function type() {
+      if (i < text.length) {
+        header.textContent += text.charAt(i);
+        i++;
+        setTimeout(type, 100);
+      }
+    }
+    type();
+  </script>
+
+  <!-- Walking direction change -->
+  <script>
+   window.addEventListener('load', () => {
+    const hero = document.querySelector('.hero');
+    let direction = 'right';
+
+    if (hero) {  // safety check
+      hero.addEventListener('animationiteration', () => {
+        if (direction === 'right') {
+          hero.classList.add('walk-left');
+          direction = 'left';
+        } else {
+          hero.classList.remove('walk-left');
+          direction = 'right';
+        }
+      });
+    }
+   });
+  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Documentation - CSS Grid & Flexbox</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <nav id="navbar">
+  <header>CSS Grid & Flexbox Guide</header>
+  <a class="nav-link" href="#Introduction">Introduction</a>
+  <a class="nav-link" href="#Grid_Basics">Grid Basics</a>
+  <a class="nav-link" href="#Flex_Basics">Flex Basics</a>
+  <a class="nav-link" href="#Grid_vs_Flex">Grid vs Flex</a>
+  <a class="nav-link" href="#Responsive_Design">Responsive Design</a>
+  <a class="nav-link" href="#Css_Tips">Css Tips</a>
+</nav>
+
+  <!-- Main doc -->
+  <main id="main-doc">
+    <section class="main-section" id="Introduction">
+      <header>Introduction</header>
+      <p>CSS Grid and Flexbox are powerful layout tools in modern web development.</p>
+      <p>They solve different problems and work well together.</p>
+      <p>Code example:</p>
+      <code>display: grid;</code>
+      <ul>
+        <li>Flexible layouts</li>
+        <li>Responsive design</li>
+        <li>Css Tips</li>
+      </ul>
+    </section>
+
+    <section class="main-section" id="Grid_Basics">
+      <header>Grid Basics</header>
+      <p>Grid is two-dimensional.</p>
+      <code>grid-template-columns: repeat(3, 1fr);</code>
+      <p>More text...</p>
+      <p>Even more text to reach 10+ p total...</p>
+    </section>
+
+    <section class="main-section" id="Flex_Basics">
+      <header>Flex Basics</header>
+      <p>Flex is one-dimensional.</p>
+      <code>display: flex; justify-content: center;</code>
+      <p>More content...</p>
+      <code>align-items: center;</code>
+      <ul><li>Item 1</li><li>Item 2</li></ul>
+    </section>
+
+    <section class="main-section" id="Grid_vs_Flex">
+      <header>Grid vs Flex</header>
+      <p>When to use each...</p>
+      <p>Text...</p>
+      <p>More text...</p>
+    </section>
+
+    <section class="main-section" id="Responsive_Design">
+      <header>Responsive Design</header>
+      <p>Media queries are key.</p>
+      <code>@media (max-width: 768px) { ... }</code>
+      <p>Final text...</p>
+      <p>Enough p elements to pass the count.</p>
+    </section>
+    <section class="main-section" id="Css_Tips">
+      <header>Css Tips</header>
+      <p>Colours are picky in css</p>
+      <code> #123 ,#000, #111 or rgb(201, 234, 228), rgba(234, 201, 217, 0.5) or #ffffff</code>
+      <p>You can make colour wheels, paint boxes and really experiment to your heart's content!</p>
+      <p> They all do the same general thing, but sometimes you have to use specific ones!</p>
+    </section>
+  </main>
+
+</body>
+</html>
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0a0015;
+  color: #e0e0ff;
+  line-height: 1.6;
+}
+
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  background: #111133;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  border-right: 2px solid #00d4ff33;
+}
+
+#navbar header {
+  color: #00d4ff;
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.8rem 1rem;
+  color: #a0a0ff;
+  text-decoration: none;
+  border-bottom: 1px solid #00d4ff22;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #00d4ff;
+}
+
+#main-doc {
+  margin-left: 320px;
+  padding: 2rem;
+  max-width: 900px;
+}
+
+.main-section {
+  margin-bottom: 4rem;
+}
+
+.main-section header {
+  color: #00d4ff;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+code {
+  background: #1a1a3a;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  color: #00ff9d;
+}
+
+@media (max-width: 815px) {
+  #navbar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 2px solid #00d4ff33;
+  }
+  #main-doc {
+    margin-left: 0;
+  }
+}

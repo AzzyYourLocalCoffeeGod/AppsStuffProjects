@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Waffle Orange 1.0</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0d0d0d;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ff0000;
+            /* Make game container responsive */
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        canvas {
+            background-color: #1a1a1a;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        #message-box {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            max-width: 80%;
+            margin: auto;
+            pointer-events: auto;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #message-box.visible {
+            opacity: 1;
+        }
+        
+        #message-box p {
+            margin: 0;
+        }
+
+        .health-bar, .powerup-bar, .charge-bar {
+            width: 150px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 5px;
+            border: 1px solid #000;
+        }
+
+        .health-bar-fill, .powerup-bar-fill, .charge-bar-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.2s ease;
+        }
+
+        .health-bar-fill {
+            background-color: #ff4d4d;
+        }
+
+        .powerup-bar-fill.multishot {
+            background-color: #00ff00;
+        }
+        
+        .powerup-bar-fill.damageboost {
+            background-color: #ff00ff;
+        }
+
+        .powerup-bar-fill.lifesteal {
+            background-color: #c0392b;
+        }
+
+        .powerup-bar-fill.moneyshot {
+            background-color: #FFD700;
+        }
+
+        .charge-bar-fill {
+            background-color: #00bfff;
+        }
+
+        .stat-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 200px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+        
+        #shield-status {
+            font-size: 1.2rem;
+            text-align: right;
+            color: #4d4dff;
+            text-shadow: 0 0 5px #4d4dff;
+            display: none;
+        }
+
+        /* Splash Screen and Store */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .overlay h1 {
+            font-size: 3rem;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            margin-bottom: 20px;
+        }
+
+        .overlay p, .overlay h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .overlay-button {
+            background-color: #ff0000;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+            margin-top: 10px;
+        }
+        
+        .overlay-button.secondary {
+            background-color: #00bfff;
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+        }
+
+        .overlay-button:hover {
+            background-color: #e60000;
+        }
+        
+        .overlay-button.secondary:hover {
+            background-color: #008cc9;
+        }
+
+        .overlay-button:active {
+            transform: scale(0.98);
+        }
+
+        #store-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .upgrade-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 300px;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .upgrade-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .upgrade-card p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .upgrade-button {
+            background-color: #00bfff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upgrade-button.disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-overlay">
+            <div class="stat-display">
+                <div class="stats-container">
+                    <div class="stat">
+                        <span>Level:</span>
+                        <span id="level-stat">1</span>
+                    </div>
+                    <div class="stat">
+                        <span>Score:</span>
+                        <span id="score-stat">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Coins:</span>
+                        <span id="coins-stat">0</span>
+                    </div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat">
+                        <span>Player Health:</span>
+                        <div class="health-bar">
+                            <div id="player-health-fill" class="health-bar-fill"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Enemies Left:</span>
+                        <span id="enemies-left-stat">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Shield Status:</span>
+                        <span id="shield-status">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-display">
+                <div class="stats-container">
+                    <div class="stat">
+                        <span>Multishot:</span>
+                        <div class="powerup-bar">
+                            <div id="multishot-bar" class="powerup-bar-fill multishot"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Multishot Lvl:</span>
+                        <span id="multishot-level-stat">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Damage Boost:</span>
+                        <div class="powerup-bar">
+                            <div id="damageboost-bar" class="powerup-bar-fill damageboost"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Damage Lvl:</span>
+                        <span id="damage-boost-level-stat">0</span>
+                    </div>
+                    <div class="stat">
+                        <span>Lifesteal:</span>
+                        <div class="powerup-bar">
+                            <div id="lifesteal-bar" class="powerup-bar-fill lifesteal"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Lifesteal Lvl:</span>
+                        <span id="lifesteal-level-stat">0</span>
+                    </div>
+                     <div class="stat">
+                        <span>Money Shot:</span>
+                        <div class="powerup-bar">
+                            <div id="moneyshot-bar" class="powerup-bar-fill moneyshot"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Money Shot Lvl:</span>
+                        <span id="moneyshot-level-stat">0</span>
+                    </div>
+                </div>
+                <div class="stats-container">
+                    <div class="stat">
+                        <span>Charge:</span>
+                        <div class="charge-bar">
+                            <div id="charge-bar" class="charge-bar-fill"></div>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Screen Clear:</span>
+                        <button id="charge-button" class="upgrade-button">Use 'E'</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="message-box"></div>
+        </div>
+
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="overlay">
+            <h1>QUANTUM WAFFLE ORANGE 1.0</h1>
+            <p>Use WASD or Arrow Keys to move.</p>
+            <p>Press SPACE to shoot.</p>
+            <p>Press P to pause the game.</p>
+            <p>Press M to open the store at any time.</p>
+            <p>Press E to use your charged ability.</p>
+            <p>Bullet power-ups are now permanent!</p>
+            <button id="start-button" class="overlay-button">Start Game</button>
+        </div>
+
+        <!-- Store Screen -->
+        <div id="store-screen" class="overlay" style="display: none;">
+            <h2>Upgrades</h2>
+            <p>Coins: <span id="store-coins-stat">0</span></p>
+            <div id="store-container">
+                <div class="upgrade-card">
+                    <h3>Damage Boost</h3>
+                    <p>Level: <span id="damage-level">0</span></p>
+                    <button class="upgrade-button" id="buy-damage">Buy (200)</button>
+                </div>
+                <div class="upgrade-card">
+                    <h3>Speed Boost</h3>
+                    <p>Level: <span id="speed-level">0</span></p>
+                    <button class="upgrade-button" id="buy-speed">Buy (150)</button>
+                </div>
+                <div class="upgrade-card">
+                    <h3>Max Health</h3>
+                    <p>Level: <span id="hp-level">0</span></p>
+                    <button class="upgrade-button" id="buy-hp">Buy (300)</button>
+                </div>
+                <div class="upgrade-card">
+                    <h3>Shield Upgrade</h3>
+                    <p>Level: <span id="shield-level">0</span></p>
+                    <button class="upgrade-button" id="buy-shield">Buy (250)</button>
+                </div>
+            </div>
+            <button id="continue-store-button" class="overlay-button secondary">Close Store</button>
+        </div>
+    </div>
+    
+    <script>
+        // --- Core Application State ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Initial canvas size
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight;
+
+        const messageBox = document.getElementById('message-box');
+        const playerHealthFill = document.getElementById('player-health-fill');
+        const shieldStatus = document.getElementById('shield-status');
+        const levelStat = document.getElementById('level-stat');
+        const scoreStat = document.getElementById('score-stat');
+        const coinsStat = document.getElementById('coins-stat');
+        const enemiesLeftStat = document.getElementById('enemies-left-stat');
+        const splashScreen = document.getElementById('splash-screen');
+        const storeScreen = document.getElementById('store-screen');
+        const storeCoinsStat = document.getElementById('store-coins-stat');
+        const damageLevelText = document.getElementById('damage-level');
+        const speedLevelText = document.getElementById('speed-level');
+        const hpLevelText = document.getElementById('hp-level');
+        const shieldLevelText = document.getElementById('shield-level');
+        
+        // New UI elements
+        const multishotBar = document.getElementById('multishot-bar');
+        const damageboostBar = document.getElementById('damageboost-bar');
+        const lifestealBar = document.getElementById('lifesteal-bar');
+        const moneyshotBar = document.getElementById('moneyshot-bar');
+        const chargeBar = document.getElementById('charge-bar');
+        const multishotLevelStat = document.getElementById('multishot-level-stat');
+        const damageBoostLevelStat = document.getElementById('damage-boost-level-stat');
+        const lifestealLevelStat = document.getElementById('lifesteal-level-stat');
+        const moneyshotLevelStat = document.getElementById('moneyshot-level-stat');
+
+        let keys = {};
+        let playerProjectiles = [];
+        let enemyProjectiles = [];
+        let enemies = [];
+        let particles = [];
+        let powerups = [];
+        let gameActive = false;
+        let isPaused = false;
+        let currentLevel = 1;
+        let score = 0;
+        let coins = 0;
+        let lastFired = 0;
+        let fireRate = 200;
+
+        // Permanent Upgrades
+        let baseDamageMultiplier = 1;
+        let baseSpeed = 5;
+        let maxHealth = 100;
+        let shieldDuration = 3;
+        let shieldHitsLeft = 0;
+
+        // Player Power-up Stats (Temporary & Tiered)
+        let multishotLevel = 0;
+        let damageBoostLevel = 0;
+        let lifestealLevel = 0;
+        let moneyShotLevel = 0;
+
+        // Charged Ability State
+        let chargeProgress = 0;
+        const chargeThreshold = 1000;
+        let chargedAbilityReady = false;
+
+        // --- Game Entities ---
+        const player = {
+            x: canvasWidth / 2 - 25,
+            y: canvasHeight - 75,
+            width: 50,
+            height: 50,
+            health: maxHealth,
+            color: '#00bfff'
+        };
+
+        const enemyTypes = [
+            {
+                name: "Basic Shooter",
+                health: 50,
+                width: 50,
+                height: 50,
+                color: '#ff4500',
+                speed: 1.5,
+                scoreValue: 100,
+                coinValue: 10,
+                projectileType: 'straight',
+                chargeValue: 50
+            },
+            {
+                name: "Fast Shooter",
+                health: 75,
+                width: 45,
+                height: 45,
+                color: '#ff8c00',
+                speed: 2.5,
+                scoreValue: 150,
+                coinValue: 15,
+                projectileType: 'straight',
+                chargeValue: 75
+            },
+            {
+                name: "Spread Shooter",
+                health: 100,
+                width: 60,
+                height: 60,
+                color: '#ff00ff',
+                speed: 1.2,
+                scoreValue: 200,
+                coinValue: 20,
+                projectileType: 'spread',
+                chargeValue: 100
+            },
+            {
+                name: "Homing Shooter",
+                health: 150,
+                width: 55,
+                height: 55,
+                color: '#8a2be2',
+                speed: 1.0,
+                scoreValue: 300,
+                coinValue: 30,
+                projectileType: 'homing',
+                chargeValue: 150
+            }
+        ];
+
+        // --- Utility Functions ---
+        function resizeCanvas() {
+            canvasWidth = window.innerWidth;
+            canvasHeight = window.innerHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            // Adjust player position to stay on screen
+            player.x = Math.max(0, Math.min(canvasWidth - player.width, player.x));
+            player.y = Math.max(0, Math.min(canvasHeight - player.height, player.y));
+        }
+
+        function showMessage(text, isPausedMessage = false) {
+            messageBox.innerHTML = `<p>${text}</p>`;
+            if (isPausedMessage) {
+                const resumeBtn = document.createElement('button');
+                resumeBtn.textContent = 'Resume';
+                resumeBtn.className = 'overlay-button secondary';
+                resumeBtn.onclick = continueGame;
+                
+                const storeBtn = document.createElement('button');
+                storeBtn.textContent = 'Open Store';
+                storeBtn.className = 'overlay-button';
+                storeBtn.onclick = () => {
+                    hideMessage();
+                    showStore();
+                };
+                
+                messageBox.appendChild(resumeBtn);
+                messageBox.appendChild(storeBtn);
+            }
+            messageBox.classList.add('visible');
+        }
+        
+        function hideMessage() {
+            messageBox.classList.remove('visible');
+            messageBox.innerHTML = '';
+        }
+
+        function updateUI() {
+            playerHealthFill.style.width = `${(player.health / maxHealth) * 100}%`;
+            shieldStatus.style.display = shieldHitsLeft > 0 ? 'block' : 'none';
+            levelStat.textContent = currentLevel;
+            scoreStat.textContent = score;
+            coinsStat.textContent = coins;
+            enemiesLeftStat.textContent = enemies.length;
+            damageLevelText.textContent = upgradeStats.damage.level;
+            speedLevelText.textContent = upgradeStats.speed.level;
+            hpLevelText.textContent = upgradeStats.hp.level;
+            shieldLevelText.textContent = upgradeStats.shield.level;
+            
+            // Update power-up levels
+            multishotLevelStat.textContent = multishotLevel;
+            damageBoostLevelStat.textContent = damageBoostLevel;
+            lifestealLevelStat.textContent = lifestealLevel;
+            moneyshotLevelStat.textContent = moneyShotLevel;
+
+            // Update power-up bars (fill them if level > 0)
+            multishotBar.style.width = multishotLevel > 0 ? '100%' : '0%';
+            damageboostBar.style.width = damageBoostLevel > 0 ? '100%' : '0%';
+            lifestealBar.style.width = lifestealLevel > 0 ? '100%' : '0%';
+            moneyshotBar.style.width = moneyShotLevel > 0 ? '100%' : '0%';
+
+            // Update charged ability bar
+            chargeBar.style.width = `${Math.min(100, (chargeProgress / chargeThreshold) * 100)}%`;
+            chargedAbilityReady = chargeProgress >= chargeThreshold;
+            document.getElementById('charge-button').disabled = !chargedAbilityReady;
+        }
+
+        function showStore() {
+            isPaused = true;
+            storeScreen.style.display = 'flex';
+            storeCoinsStat.textContent = coins;
+            updateStoreButtons();
+        }
+
+        function hideStore() {
+            storeScreen.style.display = 'none';
+        }
+        
+        function continueGame() {
+            isPaused = false;
+            hideStore();
+            hideMessage();
+            if (enemies.length === 0) {
+              resetLevel();
+            }
+        }
+
+        function createParticles(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x,
+                    y,
+                    size: Math.random() * 5 + 1,
+                    speedX: (Math.random() - 0.5) * 5,
+                    speedY: (Math.random() - 0.5) * 5,
+                    color,
+                    life: 50
+                });
+            }
+        }
+
+        function spawnEnemiesForLevel() {
+            if (currentLevel > 10) {
+                showMessage("You won the game! Refresh to play again.");
+                gameActive = false;
+                return;
+            }
+            enemies = [];
+            const numEnemies = Math.min(currentLevel, 6);
+            const enemyTypeIndex = Math.min(Math.floor((currentLevel - 1) / 2), enemyTypes.length - 1);
+            const enemyType = enemyTypes[enemyTypeIndex];
+            
+            for (let i = 0; i < numEnemies; i++) {
+                const newEnemy = {
+                    ...enemyType,
+                    x: Math.random() * (canvas.width - enemyType.width),
+                    y: Math.random() * (canvas.height / 3 - enemyType.height),
+                    health: enemyType.health + (currentLevel -1) * 20,
+                    direction: Math.random() > 0.5 ? 1 : -1,
+                    isShooting: false,
+                    lastFired: 0
+                };
+                enemies.push(newEnemy);
+            }
+        }
+
+        function startGame() {
+            splashScreen.style.display = 'none';
+            gameActive = true;
+            resizeCanvas();
+            resetLevel();
+            gameLoop();
+        }
+
+        function resetLevel() {
+            playerProjectiles = [];
+            enemyProjectiles = [];
+            particles = [];
+            powerups = [];
+            
+            spawnEnemiesForLevel();
+            
+            gameActive = true;
+            updateUI();
+            showMessage(`Level ${currentLevel} Start!`);
+            setTimeout(hideMessage, 2000);
+        }
+
+        function useChargedAbility() {
+            if (!chargedAbilityReady) return;
+            enemyProjectiles = [];
+            chargeProgress = 0;
+            updateUI();
+            showMessage("Screen Cleared!");
+            setTimeout(hideMessage, 1500);
+        }
+
+        // --- Power-up Functions ---
+        function spawnPowerup() {
+            if (!gameActive || isPaused || enemies.length === 0) return;
+            const powerupTypes = ['multishot', 'damageboost', 'shield', 'lifesteal', 'moneyshot'];
+            const type = powerupTypes[Math.floor(Math.random() * powerupTypes.length)];
+            const x = Math.random() * (canvas.width - 20) + 10;
+            const y = Math.random() * (canvas.height - 20) + 10;
+            
+            let color;
+            switch(type) {
+                case 'multishot': color = '#00ff00'; break;
+                case 'damageboost': color = '#ff00ff'; break;
+                case 'shield': color = '#4d4dff'; break;
+                case 'lifesteal': color = '#c0392b'; break;
+                case 'moneyshot': color = '#FFD700'; break;
+            }
+
+            powerups.push({
+                x, y, size: 20, type, color
+            });
+        }
+        
+        setInterval(spawnPowerup, 8000);
+
+        // --- Enemy Logic ---
+        function spawnEnemyProjectiles(enemy) {
+            if (!gameActive || isPaused) return;
+
+            const now = Date.now();
+            const fireInterval = 1000 - (currentLevel * 50);
+            if (now - enemy.lastFired < fireInterval) return;
+            enemy.lastFired = now;
+
+            if (enemy.projectileType === 'straight') {
+                enemyProjectiles.push({
+                    x: enemy.x + enemy.width / 2,
+                    y: enemy.y + enemy.height,
+                    radius: 5,
+                    speedX: 0,
+                    speedY: 2 + currentLevel * 0.2,
+                    color: enemy.color
+                });
+            } else if (enemy.projectileType === 'spread') {
+                const speed = 2.5 + currentLevel * 0.1;
+                const angles = [-30, 0, 30];
+                angles.forEach(angleDeg => {
+                    const angleRad = angleDeg * Math.PI / 180;
+                    enemyProjectiles.push({
+                        x: enemy.x + enemy.width / 2,
+                        y: enemy.y + enemy.height,
+                        radius: 5,
+                        speedX: Math.sin(angleRad) * speed,
+                        speedY: Math.cos(angleRad) * speed,
+                        color: enemy.color
+                    });
+                });
+            } else if (enemy.projectileType === 'homing') {
+                 const angle = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+                 const speed = 2 + currentLevel * 0.1;
+                 enemyProjectiles.push({
+                    x: enemy.x + enemy.width / 2,
+                    y: enemy.y + enemy.height,
+                    radius: 5,
+                    speedX: Math.cos(angle) * speed,
+                    speedY: Math.sin(angle) * speed,
+                    color: enemy.color
+                 });
+            }
+        }
+
+        function checkCollisions() {
+            // Player vs Enemy Projectiles
+            enemyProjectiles.forEach((eProj, eIndex) => {
+                const distance = Math.sqrt(Math.pow(eProj.x - (player.x + player.width / 2), 2) + Math.pow(eProj.y - (player.y + player.height / 2), 2));
+                if (distance < eProj.radius + player.width / 2) {
+                    if (shieldHitsLeft > 0) {
+                        shieldHitsLeft--;
+                        createParticles(eProj.x, eProj.y, 10, '#ffffff');
+                        showMessage("Hit absorbed!");
+                        setTimeout(hideMessage, 1500);
+                    } else {
+                        player.health -= 5;
+                        createParticles(eProj.x, eProj.y, 10, player.color);
+                        if (player.health <= 0) {
+                            gameActive = false;
+                            showMessage("Game Over! Refresh to try again.");
+                        }
+                    }
+                    enemyProjectiles.splice(eIndex, 1);
+                    updateUI();
+                }
+            });
+
+            // Player Projectiles vs Enemies
+            playerProjectiles.forEach((pProj, pIndex) => {
+                enemies.forEach((enemy, eIndex) => {
+                    if (pProj.x + pProj.width > enemy.x &&
+                        pProj.x < enemy.x + enemy.width &&
+                        pProj.y < enemy.y + enemy.height &&
+                        pProj.y + pProj.height > enemy.y) {
+                        
+                        const damageDealt = 10 * baseDamageMultiplier * (damageBoostLevel > 0 ? damageBoostLevel : 1);
+                        enemy.health -= damageDealt;
+
+                        if (lifestealLevel > 0) {
+                            const healthRecovered = damageDealt * (lifestealLevel * 0.1);
+                            player.health = Math.min(maxHealth, player.health + healthRecovered);
+                        }
+
+                        playerProjectiles.splice(pIndex, 1);
+                        
+                        if (enemy.health <= 0) {
+                            const coinMultiplier = 1 + moneyShotLevel;
+                            coins += enemy.coinValue * coinMultiplier;
+                            createParticles(enemy.x, enemy.y, 20, enemy.color);
+                            // Add charge progress on enemy kill
+                            chargeProgress += enemy.chargeValue;
+                            enemies.splice(eIndex, 1);
+                            updateUI();
+                            if (enemies.length === 0) {
+                                currentLevel++;
+                                showMessage(`Wave Cleared! Coins Earned: ${enemy.coinValue}`);
+                                setTimeout(showStore, 2000);
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Player vs Power-ups
+            powerups.forEach((powerup, pIndex) => {
+                const distance = Math.sqrt(Math.pow(powerup.x - (player.x + player.width / 2), 2) + Math.pow(powerup.y - (player.y + player.height / 2), 2));
+                if (distance < powerup.size / 2 + player.width / 2) {
+                    powerups.splice(pIndex, 1);
+                    
+                    switch(powerup.type) {
+                        case 'multishot':
+                            multishotLevel = Math.min(9, multishotLevel + 1);
+                            break;
+                        case 'damageboost':
+                            damageBoostLevel = Math.min(9, damageBoostLevel + 1);
+                            break;
+                        case 'shield':
+                            shieldHitsLeft = shieldDuration;
+                            break;
+                        case 'lifesteal':
+                            lifestealLevel = Math.min(9, lifestealLevel + 1);
+                            break;
+                        case 'moneyshot':
+                            moneyShotLevel = Math.min(9, moneyShotLevel + 1);
+                            break;
+                    }
+                    updateUI();
+                }
+            });
+        }
+
+        // --- Game Loop Functions ---
+        function update() {
+            if (!gameActive || isPaused) return;
+
+            // Player Movement
+            if (keys['arrowup'] || keys['w']) player.y -= baseSpeed;
+            if (keys['arrowdown'] || keys['s']) player.y += baseSpeed;
+            if (keys['arrowleft'] || keys['a']) player.x -= baseSpeed;
+            if (keys['arrowright'] || keys['d']) player.x += baseSpeed;
+
+            player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
+            player.y = Math.max(0, Math.min(canvas.height - player.height, player.y));
+            
+            // Enemy Movement and Shooting
+            enemies.forEach(enemy => {
+                enemy.x += enemy.speed * enemy.direction;
+                if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+                    enemy.direction *= -1;
+                }
+                spawnEnemyProjectiles(enemy);
+            });
+
+            playerProjectiles = playerProjectiles.filter(p => p.y > 0);
+            playerProjectiles.forEach(p => {
+                p.x += p.dx;
+                p.y += p.dy;
+            });
+
+            enemyProjectiles = enemyProjectiles.filter(p => p.y < canvas.height && p.x > 0 && p.x < canvas.width);
+            enemyProjectiles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+            });
+            
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.life--;
+            });
+            particles = particles.filter(p => p.life > 0);
+            
+            checkCollisions();
+            updateUI();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            if (shieldHitsLeft > 0) {
+                ctx.strokeStyle = '#4d4dff';
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.arc(player.x + player.width / 2, player.y + player.height / 2, player.width / 2 + 10, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            enemies.forEach(enemy => {
+                ctx.fillStyle = enemy.color;
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+            });
+
+            playerProjectiles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.width, p.height);
+            });
+
+            enemyProjectiles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            powerups.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // --- Store Logic ---
+        const upgradeStats = {
+            damage: { level: 0, cost: 200, baseCost: 200 },
+            speed: { level: 0, cost: 150, baseCost: 150 },
+            hp: { level: 0, cost: 300, baseCost: 300 },
+            shield: { level: 0, cost: 250, baseCost: 250 }
+        };
+
+        function updateStoreButtons() {
+            document.getElementById('buy-damage').textContent = `Buy (${upgradeStats.damage.cost})`;
+            document.getElementById('buy-speed').textContent = `Buy (${upgradeStats.speed.cost})`;
+            document.getElementById('buy-hp').textContent = `Buy (${upgradeStats.hp.cost})`;
+            document.getElementById('buy-shield').textContent = `Buy (${upgradeStats.shield.cost})`;
+
+            document.getElementById('buy-damage').disabled = coins < upgradeStats.damage.cost;
+            document.getElementById('buy-speed').disabled = coins < upgradeStats.speed.cost;
+            document.getElementById('buy-hp').disabled = coins < upgradeStats.hp.cost;
+            document.getElementById('buy-shield').disabled = coins < upgradeStats.shield.cost;
+            
+            document.getElementById('buy-damage').classList.toggle('disabled', coins < upgradeStats.damage.cost);
+            document.getElementById('buy-speed').classList.toggle('disabled', coins < upgradeStats.speed.cost);
+            document.getElementById('buy-hp').classList.toggle('disabled', coins < upgradeStats.hp.cost);
+            document.getElementById('buy-shield').classList.toggle('disabled', coins < upgradeStats.shield.cost);
+        }
+
+        function purchaseUpgrade(type) {
+            const upgrade = upgradeStats[type];
+            if (coins >= upgrade.cost) {
+                coins -= upgrade.cost;
+                upgrade.level++;
+
+                if (upgrade.level % 9 === 0) {
+                    upgrade.cost = Math.round(upgrade.baseCost * (1.5 + (upgrade.level / 9 * 0.5)));
+                    upgrade.baseCost = upgrade.cost;
+                } else {
+                    upgrade.cost = Math.round(upgrade.cost * 1.2);
+                }
+
+                switch (type) {
+                    case 'damage':
+                        baseDamageMultiplier += 0.2;
+                        break;
+                    case 'speed':
+                        baseSpeed += 0.5;
+                        break;
+                    case 'hp':
+                        maxHealth += 20;
+                        player.health = maxHealth;
+                        break;
+                    case 'shield':
+                        shieldDuration += 1;
+                        break;
+                }
+                
+                storeCoinsStat.textContent = coins;
+                updateStoreButtons();
+                updateUI();
+                showMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} upgraded!`);
+                setTimeout(hideMessage, 1500);
+            }
+        }
+
+        document.getElementById('buy-damage').addEventListener('click', () => purchaseUpgrade('damage'));
+        document.getElementById('buy-speed').addEventListener('click', () => purchaseUpgrade('speed'));
+        document.getElementById('buy-hp').addEventListener('click', () => purchaseUpgrade('hp'));
+        document.getElementById('buy-shield').addEventListener('click', () => purchaseUpgrade('shield'));
+        document.getElementById('charge-button').addEventListener('click', useChargedAbility);
+
+        // --- Event Listeners ---
+        document.getElementById('start-button').addEventListener('click', startGame);
+        document.getElementById('continue-store-button').addEventListener('click', continueGame);
+        
+        // Add window resize listener
+        window.addEventListener('resize', resizeCanvas);
+
+        window.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            keys[key] = true;
+
+            if (key === 'p' && gameActive) {
+                isPaused = !isPaused;
+                if (isPaused) {
+                    showMessage("Paused", true);
+                } else {
+                    hideMessage();
+                }
+            }
+
+            if (key === 'm' && gameActive) {
+                if (storeScreen.style.display === 'flex') {
+                    continueGame();
+                } else {
+                    showStore();
+                }
+            }
+            
+            if (key === 'e' && gameActive && !isPaused) {
+                useChargedAbility();
+            }
+
+            if (key === ' ' && gameActive && !isPaused) {
+                event.preventDefault();
+                const now = Date.now();
+                if (now - lastFired > fireRate) {
+                    const baseWidth = 5;
+                    const baseHeight = 20;
+                    const totalProjectiles = multishotLevel > 0 ? multishotLevel : 1;
+                    const spreadAngle = 10;
+                    const startAngle = (totalProjectiles - 1) * -spreadAngle / 2;
+
+                    for (let i = 0; i < totalProjectiles; i++) {
+                        const angle = startAngle + i * spreadAngle;
+                        const radians = angle * (Math.PI / 180);
+
+                        playerProjectiles.push({
+                            x: player.x + player.width / 2 - baseWidth / 2,
+                            y: player.y,
+                            width: baseWidth,
+                            height: baseHeight,
+                            speed: 7,
+                            dx: Math.sin(radians) * 7,
+                            dy: -Math.cos(radians) * 7,
+                            type: 'normal',
+                            color: '#ffff00'
+                        });
+                    }
+                    lastFired = now;
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (event) => {
+            keys[event.key.toLowerCase()] = false;
+        });
+
+    </script>
+</body>
+</html>

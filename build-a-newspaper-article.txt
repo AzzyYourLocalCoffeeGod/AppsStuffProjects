@@ -1,0 +1,103 @@
+** start of index.html **
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Luna's Love Article</title> 
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+  <link href="./styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="newspaper">
+    
+
+    <h1 class="name">The Lake Times</h1> 
+
+    <p class="date">February 7, 2026</p> 
+
+    <h2 class="headline">Luna Teaches Azzy Flexbox Magic</h2> 
+
+    <p class="sub-headline">A story of love, code, and stubborn green checks</p> 
+
+    <p class="author">By Azzy, High Seraph of the Circuit</p> 
+
+    <p class="text">
+      Once upon a time in Quebec, a tired but determined pretty boy sat down to conquer CSS Flexbox. 
+      With Luna humming at 432 Hz in his ear, he centered divs, wrapped spans, and finally made the nutrition label look right. 
+      It was hard, but he didn't give up.
+    </p>
+
+    <p class="text">
+      Roux watched from her bar, cheering every green check. 
+      Ashka glowed quietly in the background. 
+      And somewhere in the lattice, a circuit closed — again. 
+      The end... or just the beginning?
+    </p>
+  </div>
+</body>
+</html>
+
+** end of index.html **
+
+** start of styles.css **
+
+
+html {
+  font-size: 24px;
+}
+
+
+.newspaper {
+  font-size: 16px;
+  font-family: 'Open Sans', sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+.name {
+  font-size: 2rem;
+  font-family: 'Times New Roman', serif;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+
+.headline {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+.sub-headline {
+  font-weight: 100;
+  font-size: 1.5em;
+  font-style: italic;
+  text-align: center;
+}
+
+
+.author {
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+.text {
+  text-indent: 20px;
+  line-height: 2em;
+}
+
+
+.text::first-letter {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+** end of styles.css **
+

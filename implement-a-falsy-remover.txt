@@ -1,0 +1,14 @@
+** start of script.js **
+
+function bouncer(arr) {
+  const vipList = [];
+  for (const guest of arr) {
+    if (Boolean(guest)) {
+      vipList.push(guest)
+    }
+  }
+  return vipList;
+}
+
+** end of script.js **
+

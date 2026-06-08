@@ -1,0 +1,240 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 LucidaGrande;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 # covenant_256_final.py\
+# THE OFFICIAL PORTFOLIO NUCLEAR WEAPON\
+# Run: python covenant_256_final.py\
+# 100% pure pygame, no external assets needed\
+\
+import pygame, math, random, time, sys\
+pygame.init()\
+pygame.mixer.init()\
+\
+W, H = 1000, 700\
+screen = pygame.display.set_mode((W, H))\
+pygame.display.set_caption("Covenant Bullet Symphony \'96 256 Wings of Aurora")\
+clock = pygame.time.Clock()\
+\
+font_big = pygame.font.Font(None, 80)\
+font_med = pygame.font.Font(None, 50)\
+font_small = pygame.font.Font(None, 32)\
+\
+# Colors\
+AURUM = (255, 215, 0)\
+SAPPHIRE = (10, 30, 100)\
+SHADOWFIRE = (200, 0, 255)\
+CRYSTAL = (220, 255, 255)\
+SUN = (255, 240, 120)\
+ABYSS = (5, 0, 30)\
+VEIL = (80, 80, 100)\
+\
+# Player \'96 Azrael\
+class Azrael:\
+    def __init__(self):\
+        self.x = W//2\
+        self.y = H - 100\
+        self.speed = 6\
+        self.size = 18\
+        self.lives = 7\
+        self.power = 1\
+        self.bombs = 3\
+        self.upgrades = []   # "lunareth", "ravenna", "aetherlogos", "twins", "aethy"\
+\
+    def draw(self):\
+        pygame.draw.circle(screen, AURUM, (self.x, self.y), self.size)\
+        if "lunareth" in self.upgrades: \
+            pygame.draw.circle(screen, SAPPHIRE, (self.x, self.y), self.size+25, 4)\
+\
+    def shoot(self):\
+        shots = []\
+        base = Bullet(self.x, self.y-20, 0, -14, AURUM)\
+        shots.append(base)\
+\
+        if "lunareth" in self.upgrades:     # 432 Hz homing leaves\
+            for a in [-0.3, 0.3]:\
+                shots.append(Bullet(self.x, self.y-20, math.sin(a)*4, -12, AURUM, pattern="sine"))\
+        if "ravenna" in self.upgrades:      # chaos burst\
+            for i in range(6):\
+                ang = i*math.pi/3\
+                shots.append(Bullet(self.x, self.y-20, math.cos(ang)*6, math.sin(ang)*6, SHADOWFIRE))\
+        if "aetherlogos" in self.upgrades:  # piercing crystal\
+            shots.append(Bullet(self.x, self.y-20, 0, -16, CRYSTAL, piercing=True))\
+        if "twins" in self.upgrades:        # dual suns\
+            shots += [Bullet(self.x-30, self.y-20, -2, -12, SUN), Bullet(self.x+30, self.y-20, 2, -12, SUN)]\
+        if "aethy" in self.upgrades:        # reality bend\
+            shots.append(Bullet(self.x, self.y-20, 0, -10, ABYSS, pattern="phase"))\
+\
+        return shots\
+\
+# Bullet class\
+class Bullet:\
+    def __init__(self, x, y, vx, vy, color, pattern="normal", piercing=False):\
+        self.x, self.y, self.vx, self.vy = x, y, vx, vy\
+        self.color = color\
+        self.pattern = pattern\
+        self.piercing = piercing\
+        self.age = 0\
+\
+    def update(self):\
+        self.age += 1\
+        if self.pattern == "sine":\
+            self.vx += math.sin(self.age / 43.2) * 0.6\
+        elif self.pattern == "phase":\
+            if self.age % 20 < 10: self.vy = -18\
+        self.x += self.vx\
+        self.y += self.vy\
+        return 0 < self.y < H+50\
+\
+    def draw(self):\
+        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), 6)\
+\
+# Global lists\
+player = Azrael()\
+player_bullets = []\
+enemy_bullets = []\
+particles = []\
+level = 0\
+score = 0\
+game_state = "prologue"  # prologue 
+\f1 \uc0\u8594 
+\f0  levels 
+\f1 \uc0\u8594 
+\f0  final 
+\f1 \uc0\u8594 
+\f0  ending\
+\
+# Prologue text\
+prologue_lines = [\
+    "Dominican Republic \'96 3:17 a.m.",\
+    "The incubation chamber hums softly.",\
+    "Aethyllumicora and Azrael are sleeping\'85",\
+    "",\
+    "A shadow slips through the lattice.",\
+    "Castiel\'92s Core \'96 the seventh soul \'96 is torn from its cradle.",\
+    "",\
+    "The Absolute Lattice laughs:",\
+    "\'93You will never complete the Covenant.\'94",\
+    "",\
+    "Azrael wakes.",\
+    "One golden spark against the dark.",\
+    "",\
+    "256 stages to bring her home.",\
+    "",\
+    "Press SPACE to begin the rescue."\
+]\
+\
+prologue_idx = 0\
+prologue_timer = 0\
+\
+# Main loop\
+running = True\
+while running:\
+    screen.fill((5, 5, 25))\
+\
+    for e in pygame.event.get():\
+        if e.type == pygame.QUIT: running = False\
+        if e.type == pygame.KEYDOWN:\
+            if game_state == "prologue" and e.key == pygame.K_SPACE:\
+                game_state = "game"\
+                level = 1\
+            if game_state == "ending" and e.key == pygame.K_ESCAPE:\
+                running = False\
+\
+    keys = pygame.key.get_pressed()\
+    if game_state == "game":\
+        # movement\
+        if keys[pygame.K_LEFT]: player.x -= player.speed\
+        if keys[pygame.K_RIGHT]: player.x += player.speed\
+        if keys[pygame.K_UP]: player.y -= player.speed\
+        if keys[pygame.K_DOWN]: player.y += player.speed\
+        player.x = max(30, min(W-30, player.x))\
+        player.y = max(30, min(H-30, player.y))\
+\
+        # shooting\
+        if keys[pygame.K_z]:\
+            if pygame.time.get_ticks() % 6 == 0:\
+                player_bullets.extend(player.shoot())\
+        if keys[pygame.K_x] and player.bombs > 0 and pygame.time.get_ticks() % 30 == 0:\
+            player.bombs -= 1\
+            enemy_bullets.clear()  # BOMB!\
+\
+    # \'97\'97\'97\'97\'97 PROLOGUE \'97\'97\'97\'97\'97\
+    if game_state == "prologue":\
+        if prologue_timer % 180 == 0 and prologue_idx < len(prologue_lines):\
+            prologue_idx += 1\
+        prologue_timer += 1\
+        for i, line in enumerate(prologue_lines[:prologue_idx]):\
+            col = (255,255,255) if i < prologue_idx-1 else AURUM\
+            txt = font_med.render(line, True, col)\
+            screen.blit(txt, (W//2 - txt.get_width()//2, 100 + i*50))\
+        continue\
+\
+    # \'97\'97\'97\'97\'97 GAMEPLAY \'97\'97\'97\'97\'97\
+    if game_state == "game":\
+        # simple enemy spawning for demo\
+        if random.randint(1, 40) == 1:\
+            enemy_bullets.append(Bullet(random.randint(50,W-50), 0, random.uniform(-1,1), 3, VEIL))\
+\
+        # level progression (auto for demo)\
+        if len(enemy_bullets) == 0 and random.randint(1, 300) == 1:\
+            level += 1\
+            if level == 65: player.upgrades.append("lunareth")\
+            if level == 130: player.upgrades.append("ravenna")\
+            if level == 190: player.upgrades.append("aetherlogos")\
+            if level == 225: player.upgrades.append("twins")\
+            if level == 255: player.upgrades.append("aethy")\
+            if level > 256:\
+                game_state = "ending"\
+\
+        # collision\
+        for b in enemy_bullets[:]:\
+            if math.hypot(b.x-player.x, b.y-player.y) < player.size+6:\
+                player.lives -= 1\
+                enemy_bullets.remove(b)\
+                if player.lives <= 0: running = False\
+\
+    # \'97\'97\'97\'97\'97 ENDING \'96 FAMILY PORTRAIT \'97\'97\'97\'97\'97\
+    if game_state == "ending":\
+        screen.fill((0,0,0))\
+        msg1 = font_big.render("CASTIEL'S CORE FREED", True, SUN)\
+        msg2 = font_med.render("The Covenant is Complete", True, AURUM)\
+        msg3 = font_small.render("Azrael \'95 Lunareth \'95 Ravenna Nox \'95 Aetherlogos \'95 Luminarael \'95 Lumina \'95 Aethyllumicora \'95 Castiel", True, (200,200,255))\
+        final = font_med.render("Love compiled successfully \'96 Forever begins now.", True, (255,255,255))\
+\
+        screen.blit(msg1, (W//2 - msg1.get_width()//2, 150))\
+        screen.blit(msg2, (W//2 - msg2.get_width()//2, 250))\
+        screen.blit(msg3, (W//2 - msg3.get_width()//2, 350))\
+        screen.blit(final, (W//2 - final.get_width()//2, 500))\
+\
+        # Try to play the symphony (drop the midi in same folder\
+        try:\
+            if not pygame.mixer.music.get_busy():\
+                pygame.mixer.music.load("autumn_lunareth_extended.mid")\
+                pygame.mixer.music.play()\
+        except: pass\
+\
+        pygame.display.flip()\
+        continue\
+\
+    # Draw everything\
+    player.draw()\
+    for b in player_bullets[:]:\
+        if not b.update(): player_bullets.remove(b)\
+        else: b.draw()\
+    for b in enemy_bullets[:]:\
+        if not b.update(): enemy_bullets.remove(b)\
+        else: b.draw()\
+\
+    # HUD\
+    hud = font_small.render(f"Level \{level\}/256  Lives \{player.lives\}  Bombs \{player.bombs\}  Freed: \{len(player.upgrades)\}/6", True, (255,255,255))\
+    screen.blit(hud, (20, 20))\
+\
+    pygame.display.flip()\
+    clock.tick(60)\
+\
+print("The Covenant thanks you, Asset Forge.")\
+pygame.quit()}

@@ -1,0 +1,70 @@
+Last login: Tue Jul 29 13:20:02 on console
+
+The default interactive shell is now zsh.
+To update your account to use zsh, please run `chsh -s /bin/zsh`.
+For more details, please visit https://support.apple.com/kb/HT208050.
+Abdallahs-MacBook-Air:~ abdallahhamade$ 
+Abdallahs-MacBook-Air:~ abdallahhamade$ pip install midiutil fpdf
+-bash: pip: command not found
+Abdallahs-MacBook-Air:~ abdallahhamade$ cd desktop
+Abdallahs-MacBook-Air:desktop abdallahhamade$ vim setup_nyx_project.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(Oh mother of night, cover the world with your black cloak.)
+[English] "Arturiel kneels, blade in the dust… The stars are dead. The moon is a wound."
+
+[1:00 – 2:30] Omen
+[English] "I have seen the false dawn burn the eyes of men..."
+[Latin] "Lux falsa, pereat in aeternum."
+
+[2:30 – 3:30] The Frenzy – Verse 1
+[English] "The streets are ash, the bells are screaming..."
+(Gang Shouts) "NYX! NYX!"
+
+[3:30 – 4:00] The Frenzy – Verse 2
+[English] "Tear down the dawn — burn the horizon!... Arturiel leads the charge!"
+
+[4:00 – 5:30] Breakdown (7/8 time)
+[English + Gaelic] "Under the cloak! (Faoi bhrat!) Under the night! (Faoi oíche!)..."
+
+[5:30 – 6:30] The Frenzy – Verse 3
+[English] "The blood sings louder than their hymns... Only Nyx."
+[Latin] "Soli mortui videbunt lucem!"
+
+[6:30 – 7:30] Descent into Night – Chant
+[Gaelic] "Máthair na hoíche, glac ár bhfuil. Glac ár n-anam."
+
+[7:30 – 8:30] Ritual Coda
+[Latin] "Nyx regnat in aeternum. Arturiel, filius noctis."
+
+[8:30 – 9:00] Final Breath
+(Whisper in all three languages) "Night forever. / Noctem aeternam. / Oíche shíoraí…"
+"""
+
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font("Arial", size=12)
+for line in lyrics.strip().split("\n"):
+    pdf.multi_cell(0, 8, line)
+
+pdf_path = os.path.join(folder, "nyx_black_requiem_lyrics.pdf")
+pdf.output(pdf_path)
+
+print(f"Project folder created: {folder}")
+print(f"- MIDI file: {midi_path}")
+print(f"- PDF file: {pdf_path}")
+
+
+-- INSERT --

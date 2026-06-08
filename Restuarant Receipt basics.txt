@@ -1,0 +1,55 @@
+
+function calculateOrderTotal(mainDishPrice = 10, drinkPrice = 2) {
+  return mainDishPrice + drinkPrice;
+}
+
+let orderTotal = calculateOrderTotal(12); // Uses default price for the drink
+console.log("The total for your order is: $" + orderTotal);
+
+
+// Defining the function with a default parameter
+function serveStarter(starter = "Galactic Garlic Bread") {
+  console.log(`Serving the starter: ${starter}`);
+}
+
+function serveMainCourse(mainCourse) {
+  console.log(`Enjoy your main course: ${mainCourse}`);
+}
+
+// Now, calling it without an argument will serve the default
+serveStarter(); 
+
+// You can still override the default if a guest chooses something else
+serveStarter("Andromeda Antipasto");
+
+serveMainCourse("Martian Mushroom Risotto");
+
+// TODO: Create a function that welcomes a guest with a default name
+function welcomeGuest(guestName = "Valued Traveler") {
+  console.log(`Welcome to the Cosmic Restaurant, ${guestName}!`);
+}
+
+// Function to finalize the greeting process
+function finalGreet(guestName) {
+  // TODO: Invoke the welcomeGuest function with guestName as its argument
+  welcomeGuest(guestName); 
+  console.log("Your table is ready.");
+}
+
+// Invoking the function with a guest's name
+finalGreet("Star Commander");
+
+// If we invoked finalGreet() without an argument, it would say "Welcome... Valued Traveler!"
+// TODO: Define a function named 'calculateTotalBill' 
+// The taxRate is "optional" because we set it to 0.07 by default.
+function calculateTotalBill(mealPrice, taxRate = 0.07) {
+  // Logic: Price + (Price * Tax)
+  const total = mealPrice + (mealPrice * taxRate);
+  return total;
+}
+
+// Determine the meal's total (e.g., a meal costing 100 credits)
+const mealCost = 100;
+const finalBill = calculateTotalBill(mealCost);
+
+console.log(`The final bill for your cosmic feast is ${finalBill} credits.`);

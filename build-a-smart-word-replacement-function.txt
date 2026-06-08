@@ -1,0 +1,21 @@
+** start of script.js **
+
+function myReplace(str, word, rplcmntWord) {
+  // 1. Check if the first letter of 'word' is Uppercase
+  if (/^[A-Z]/.test(word)) {
+    // 2. If so, make the first letter of 'rplcmntWord' Uppercase too
+    rplcmntWord = rplcmntWord[0].toUpperCase() + rplcmntWord.substring(1);
+  } else {
+    // 3. Otherwise, ensure the replacement starts with lowercase
+    rplcmntWord = rplcmntWord[0].toLowerCase() + rplcmntWord.substring(1);
+  }
+
+  // 4. Perform the swap and return the new string
+  return str.replace(word, rplcmntWord);
+}
+
+// Example: myReplace("Let us go to the Store", "Store", "mall") 
+// Result: "Let us go to the Mall"
+
+** end of script.js **
+

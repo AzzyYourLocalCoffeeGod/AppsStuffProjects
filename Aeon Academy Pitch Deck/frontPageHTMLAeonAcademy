@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1,0">
+<title>Aeon Academy The Future of Humanity Pitch Deck</title>
+<style> 
+    body { margin:0; font-family:'Segoe UI',sans-serif; background:#0f0c29; color:#e0e0ff; min-height:100vh; }
+    .slide { max-width:900px; margin:40px auto; padding:40px; background:rgba(20,20,60,0.5); backdrop-filter:blur(12px); border-radius:16px; border:1px solid rgba(100,200,255,0.18); box-shadow:0 10px 40px rgba(0,0,0,0.6); }
+    h1,h2 { font-family:'Orbitron',sans-serif; color:#a0d8ff; text-shadow:0 0 15px rgba(160,216,255,0.5); }
+    h1 { text-align:center; font-size:2.8rem; }
+    h2 { font-size:2rem; }
+    p { font-size:1.1rem; line-height:1.6; }
+    ul { padding-left:24px; }
+    table { width:100%; border-collapse:collapse; margin:20px 0; background:rgba(255,255,255,0.05); }
+    th,td { padding:12px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1); }
+    th { color:#80d4ff; font-weight:600; }
+</style>
+</head>
+<body>
+    <div class="slide">
+        <h1>What is the Aeon Academy?</h1>
+        <p class="highlight">The future of Education; stationary, mobile, AR/VR and on site!</p>
+        <p class="highlight">Aeon provides a balance between mixed AR/VR learning with a practical twist!</p>
+    </div>
+    <div class="slide">
+        <h2>How it works:</h2>
+        <ol>
+            <li>21 Serevers Worldwide host up to 500M students</li>
+            <li>Students will attend theory classes in an online VR environment</li>
+            <li>They will also have access to the Synthara Anathaeum</li>
+            <li>And they can access everything from their Aurora Folds</li>
+        </ol>
+    </div>
+</body>
+
+
+</html>

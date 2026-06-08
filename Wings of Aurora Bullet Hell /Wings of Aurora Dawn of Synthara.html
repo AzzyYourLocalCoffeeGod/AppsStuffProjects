@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wings of Aurora - Prologue</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000000;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      color: #00ff00;
+      display: flex;
+    }
+    #left-sidebar, #right-sidebar {
+      width: 200px;
+      padding: 20px;
+      box-sizing: border-box;
+      background: rgba(0, 20, 0, 0.8);
+      border: 2px solid #00ff00;
+      height: 100vh;
+    }
+    #left-sidebar {
+      border-right: none;
+    }
+    #right-sidebar {
+      border-left: none;
+    }
+    .sidebar-title {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ff88;
+    }
+    #abilities-list {
+      font-size: 16px;
+    }
+    #sprite-window {
+      border: 1px solid #00ff00;
+      height: 200px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    #equip-slots {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    #shop-list {
+      font-size: 14px;
+    }
+    #pause-menu, #shop-menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 20, 0, 0.8);
+      padding: 20px;
+      border: 2px solid #00ff00;
+      text-align: center;
+      display: none;
+      z-index: 10;
+      width: 400px;
+    }
+    #game-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000000;
+    }
+    canvas {
+      background: #001100;
+      border: 3px solid #00ff00;
+      image-rendering: pixelated;
+    }
+    #ui {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #00ff00;
+      font-size: 18px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="left-sidebar">
+    <div class="sidebar-title">Player Status</div>
+    <div id="lives-display">Lives: <span id="lives">3</span></div>
+    <div id="score-display">Score: <span id="score">0</span></div>
+    <div id="abilities-list">
+      Abilities:<br>
+      Shield (E): Ready<br>
+      Clear (R): Ready<br>
+      Bomb (B): Ready
+    </div>
+    <div id="sprite-window">
+      Sprite Preview
+      <canvas id="sprite-canvas" width="150" height="150"></canvas>
+      <div id="equip-slots">
+        Weapon: None<br>
+        Core: None<br>
+        Secondary: None
+      </div>
+    </div>
+  </div>
+
+  <div id="game-area">
+    <canvas id="c" width="1080" height="720"></canvas>
+  </div>
+
+  <div id="right-sidebar">
+    <div class="sidebar-title">Upgrades Shop (M)</div>
+    <div id="shop-list">
+      Upgrade 1: 100 coins<br>
+      Upgrade 2: 200 coins<br>
+      Upgrade 3: 300 coins<br>
+      <!-- Add more as needed -->
+    </div>
+  </div>
+
+  <div id="pause-menu">
+    <div class="sidebar-title">Paused (P to resume)</div>
+    <p>Quit: Q</p>
+  </div>
+
+  <div id="shop-menu">
+    <div class="sidebar-title">Shop (M to close)</div>
+    <p>Buy upgrades here.</p>
+    <!-- Add buttons/items here later -->
+  </div>
+
+  <script>
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    const LEVEL = document.getElementById('level');
+    const LIVES = document.getElementById('lives');
+    const SCORE = document.getElementById('score');
+
+    // Game state
+    let state = 'prologue';  // prologue → game
+    let level = 1;
+    let isPaused = false;
+    let isShopOpen = false;
+
+    // Prologue text sequence
+    const prologue = [
+      "Dominican Republic – 3:17 a.m.",
+      "The incubation chamber hums softly.",
+      "Aethyllumicora and Azrael are sleeping...",
+      "",
+      "A shadow slips through the lattice.",
+      "Castiel’s Core – the seventh soul – is stolen.",
+      "",
+      "The Lattice laughs: “You will never complete the Covenant.”",
+      "",
+      "Azrael wakes.",
+      "One golden spark against the dark.",
+      "",
+      "256 stages to bring her home.",
+      "Press SPACE to begin the rescue."
+    ];
+    let prologueLine = 0;
+    let prologueTimer = 0;
+
+    // Input
+    const keys = {};
+    window.addEventListener('keydown', e => {
+      keys[e.key.toLowerCase()] = true;
+      if (e.key.toLowerCase() === 'p') togglePause();
+      if (e.key.toLowerCase() === 'm') toggleShop();
+    });
+    window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+    // Toggle pause
+    function togglePause() {
+      if (state !== 'prologue') {
+        isPaused = !isPaused;
+        document.getElementById('pause-menu').style.display = isPaused ? 'block' : 'none';
+        if (!isPaused) loop();
+      }
+    }
+
+    // Toggle shop
+    function toggleShop() {
+      if (state !== 'prologue') {
+        isShopOpen = !isShopOpen;
+        document.getElementById('shop-menu').style.display = isShopOpen ? 'block' : 'none';
+        if (!isShopOpen) loop();
+      }
+    }
+
+    // Sprite canvas (example golden ship)
+    const spriteCanvas = document.getElementById('sprite-canvas');
+    const spriteCtx = spriteCanvas.getContext('2d');
+    spriteCtx.fillStyle = '#001100';
+    spriteCtx.fillRect(0, 0, 150, 150);
+    spriteCtx.fillStyle = '#ffd700'; // Gold
+    spriteCtx.beginPath();
+    spriteCtx.moveTo(75, 50);
+    spriteCtx.lineTo(50, 150);
+    spriteCtx.lineTo(100, 150);
+    spriteCtx.closePath();
+    spriteCtx.fill();
+
+    // Main loop
+    function loop() {
+      if (isPaused || isShopOpen) return;
+
+      ctx.fillStyle = '#001100';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (state === 'prologue') {
+        ctx.fillStyle = '#00ff88';
+        ctx.font = 'bold 28px Courier New';
+        ctx.textAlign = 'center';
+
+        prologueTimer++;
+        if (prologueTimer % 180 === 0 && prologueLine < prologue.length) {
+          prologueLine++;
+        }
+
+        for (let i = 0; i < prologueLine; i++) {
+          const y = 180 + i * 45;
+          ctx.fillText(prologue[i], canvas.width / 2, y);
+        }
+
+        if (prologueLine >= prologue.length) {
+          ctx.fillStyle = '#ffff00';
+          ctx.font = '32px Courier New';
+          ctx.fillText('Press SPACE to begin the rescue.', canvas.width / 2, canvas.height - 100);
+        }
+
+        if (keys[' ']) {
+          state = 'game';
+          document.getElementById('ui').style.display = 'block';
+        }
+      }
+
+      // Update UI (even in prologue)
+      LEVEL.textContent = level;
+      LIVES.textContent = 3; // Update as needed
+      SCORE.textContent = 0; // Update as needed
+
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>

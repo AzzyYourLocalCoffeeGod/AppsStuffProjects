@@ -1,0 +1,114 @@
+** start of index.html **
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Counter</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Character Counter</h1>
+    
+    <textarea id="text-input" placeholder="Type something... (max 50 characters)" rows="6"></textarea>
+    
+    <p id="char-count">Character Count: 0/50</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+** end of index.html **
+
+** start of styles.css **
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 120px;
+}
+
+#char-count {
+  margin-top: 10px;
+  font-weight: bold;
+  color: black;
+ 
+}
+
+/* When character count reaches 50, make the whole text red */
+
+
+#char-count.red {
+font-weight: bold;
+}
+
+** end of styles.css **
+
+** start of script.js **
+
+/* file: script.js */
+const textInput = document.getElementById("text-input");
+const charCount = document.getElementById("char-count");
+
+function updateCharacterCount() {
+    // 1. Get the current text
+    let text = textInput.value;
+    
+    // 2. Trim if over 50 (Requirement 6)
+    if (text.length > 50) {
+        textInput.value = text.substring(0, 50);
+    }
+
+    // 3. Update the count string exactly (Requirement 4)
+    const updatedCount = textInput.value.length;
+    charCount.textContent = "Character Count: " + updatedCount + "/50";
+
+    // 4. The Style Property Fix (Requirement 5)
+    if (updatedCount >= 50) {
+        // We use the hex for pure red. If this fails, try "red"
+        charCount.style.color = "#ff0000"; 
+    } else {
+        // Reset to default black/grey
+        charCount.style.color = ""; 
+    }
+}
+
+textInput.addEventListener("input", updateCharacterCount);
+
+// Initialize for the 0/50 state
+updateCharacterCount();
+
+** end of script.js **
+

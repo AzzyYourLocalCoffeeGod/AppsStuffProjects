@@ -1,0 +1,70 @@
+/* Base reset & body styling */
+body {
+    font-family: system-ui, sans-serif;
+    background: #0f172a;
+    color: #e0f2fe;
+    padding: 2rem;
+    text-align: center;
+}
+
+h1 {
+    color: #c7d2fe;
+}
+
+/* Container for nicer layout */
+.feature-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #1e293b;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* 1. Target checkboxes + hide default appearance */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    /* 1. Custom border: width, style, color */
+    border: 2px solid #64748b;
+    border-radius: 6px;
+    background-color: #0f172a;
+    position: relative;           /* Important for checkmark positioning */
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* 2 + 3 + 4. All checked states in one selector */
+input[type="checkbox"]:checked {
+    /* 3. Change background color when checked */
+    background-color: #06b6d4;    /* Teal - you can change this */
+    
+    /* 4. Change border color when checked */
+    border-color: #a5b4fc;        /* Soft purple/lavender - change if you want */
+}
+
+/* 2. Display checkmark ✓ in center when checked */
+input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+
